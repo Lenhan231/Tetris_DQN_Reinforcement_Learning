@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(git init *)",
-      "Bash(git config *)"
+      "Bash(git config *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git mv *)",
+      "Bash(python -c \"from tetris import TetrisGame; from network import DeepQNetwork; print\\('✅ All imports working correctly!'\\)\")",
+      "Bash(python -c \"import sys; sys.path.insert\\(0, 'C:\\\\\\\\Users\\\\\\\\nhanl\\\\\\\\OneDrive\\\\\\\\Desktop\\\\\\\\School\\\\\\\\REL301m\\\\\\\\tetris_from_scratch\\\\\\\\code'\\); from tetris import TetrisGame; from network import DeepQNetwork; print\\('✅ All imports working correctly!'\\)\")"
     ]
   }
 }

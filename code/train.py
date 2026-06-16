@@ -63,12 +63,12 @@ Q-VALUE:
 ═════════════════════════════════════════════════════════════════════════════
 
 Chạy:
-  python step4_train_dqn.py --num_epochs 300
+  python train.py --num_epochs 300
 
-  python step4_train_dqn.py --num_epochs 300 --render
+  python train.py --num_epochs 300 --render
   (show live game rendering while training)
 
-  python step4_train_dqn.py --num_epochs 300 --wandb
+  python train.py --num_epochs 300 --wandb
   (track game + model metrics in Weights & Biases dashboard)
   └─ Game metrics: avg_score/100, avg_rewards/100, best_lines/100, avg_pieces/100, avg_lines/100
   └─ Model metrics: loss, epsilon
@@ -88,8 +88,8 @@ try:
 except ImportError:
     WANDB_AVAILABLE = False
 
-from step1_tetris_basic import TetrisGame
-from step3_neural_network import DeepQNetwork
+from tetris import TetrisGame
+from network import DeepQNetwork
 
 
 class DQNAgent:
@@ -418,6 +418,6 @@ if __name__ == "__main__":
     print("✅ STEP 4 COMPLETE - DQN Training Done!")
     print("=" * 70)
     print("\nNext steps:")
-    print("  1. Test model: python step5_test_model.py --model_path models/tetris_final.pth")
+    print("  1. Test model: python test.py --model_path models/tetris_final.pth")
     print("  2. Or continue with step 5 (Play game with trained model)")
     print("=" * 70)

@@ -100,7 +100,7 @@ Repeat many times → Network learns!
 
 ═════════════════════════════════════════════════════════════════════════════
 
-Chạy: python step3_neural_network.py (demo + examples)
+Chạy: python network.py (demo + examples)
 """
 
 import torch

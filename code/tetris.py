@@ -45,7 +45,7 @@ KEY MECHANICS
 
 ═════════════════════════════════════════════════════════════════════════════
 
-Chạy: python step1_tetris_basic.py (demo game 5 steps)
+Chạy: python tetris.py (demo game 5 steps)
 """
 
 import random

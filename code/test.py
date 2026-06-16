@@ -4,18 +4,18 @@ STEP 5: TEST & EVALUATE TRAINED MODEL
 Test trained DQN model on Tetris
 
 Usage:
-    python step5_test_model.py --model_path models/tetris_final.pth              # 10 games + stats
-    python step5_test_model.py --model_path models/tetris_final.pth --num_games 50
-    python step5_test_model.py --model_path models/tetris_final.pth --infinite   # Infinite mode
-    python step5_test_model.py --model_path models/tetris_final.pth --infinite --speed 1.5
+    python test.py --model_path models/tetris_final.pth              # 10 games + stats
+    python test.py --model_path models/tetris_final.pth --num_games 50
+    python test.py --model_path models/tetris_final.pth --infinite   # Infinite mode
+    python test.py --model_path models/tetris_final.pth --infinite --speed 1.5
 """
 
 import argparse
 import torch
 import numpy as np
 from copy import deepcopy
-from step1_tetris_basic import TetrisGame
-from step3_neural_network import DeepQNetwork
+from tetris import TetrisGame
+from network import DeepQNetwork
 
 
 class DQNTester:
