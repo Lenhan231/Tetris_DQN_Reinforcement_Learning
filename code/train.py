@@ -269,13 +269,14 @@ class DQNAgent:
                 self.env.render()
 
             # Lưu experience vào buffer
-            self.memory.append((state, reward, next_state, done))
+            if reward >= 0:
+                self.memory.append((state, reward, next_state, done))
 
             # Update state cho vòng lặp tiếp theo
             state = next_state
 
             # Train periodically (khi buffer có đủ samples)
-            if len(self.memory) > self.args.memory_size / 10:
+            if len(self.memory) > self.args.memory_size / 10000:
                 loss = self.train_step()
                 self.total_loss += loss
                 self.loss_count += 1
