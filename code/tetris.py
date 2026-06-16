@@ -341,15 +341,15 @@ class TetrisGame:
 
         # Reward shaping: encourage good board states
         # (Agent learns WHAT makes good states, not just from rare line clears)
-        if lines_cleared == 0:  # Nếu không clear line nào, đánh giá state hiện tại
-            state_features = self._get_state_features()
-            lines, holes, bumpiness, height = state_features
-            # height is total height of all columns (tall = bad)
-            # Penalize bad states (negative reward = discourage)
-            # Normalize by typical max values
-            reward -= 0.5 * (height)          # Tall = bad (risk of game over)
-            reward -= 0.36 * (holes)           # Holes = bad (blocks future)
-            reward -= 0.2 * (bumpiness)      # Bumpy = bad (inefficient)
+        # if lines_cleared == 0:  # Nếu không clear line nào, đánh giá state hiện tại
+        state_features = self._get_state_features()
+        lines, holes, bumpiness, height = state_features
+        # height is total height of all columns (tall = bad)
+        # Penalize bad states (negative reward = discourage)
+        # Normalize by typical max values
+        reward -= 0.5 * (height)          # Tall = bad (risk of game over)
+        reward -= 0.36 * (holes)           # Holes = bad (blocks future)
+        reward -= 0.2 * (bumpiness)      # Bumpy = bad (inefficient)
 
         # 6. Spawn piece mới
         self._spawn_new_piece()
