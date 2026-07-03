@@ -37,13 +37,13 @@ KEY CONCEPTS:
 ═════════════════════════════════════════════════════════════════════════════
 
 EPSILON-GREEDY STRATEGY (Explore vs Exploit):
-  Early epochs (ε=1.0):   90% random explore → tìm hiểu toàn bộ
-  Late epochs (ε=0.001):  99% best action → khai thác knowledge
+  Early epochs (ε=1.0):  100% random explore → tìm hiểu toàn bộ
+  Late epochs (ε=0.01):  99% best action, giữ 1% random để data luôn đa dạng
   Decay: linear qua 2000 epochs
 
 REPLAY BUFFER:
   - Mỗi step lưu 1 experience: (state, reward, next_state, done)
-  - Max 30,000 experiences (cũ nhất xóa)
+  - Max 100,000 experiences (cũ nhất xóa) — to để 1 ván dài không flood buffer
   - Lấy random batch để train (tránh overfitting sequential data)
 
 TARGET NETWORK:
@@ -117,6 +117,7 @@ class DQNAgent:
         # Replay buffer: lưu (state, reward, next_state, done)
         self.memory = deque(maxlen=args.memory_size)
         self.best_score = 0.0
+        self.last_best_path = None  # file best gần nhất của run này (để xóa khi có bản mạnh hơn)
 
         # Tracking progress
         self.episode = 0
@@ -260,6 +261,13 @@ class DQNAgent:
         total_reward = 0.0
 
         while not self.env.game_over:
+            # Cap độ dài episode lúc train: 1 ván 3000+ khối một mình chiếm
+            # cả chục % buffer → network chỉ ôn trạng thái đẹp rồi quên trạng
+            # thái xấu (catastrophic forgetting). Cắt ván tại đây, transition
+            # cuối vẫn done=False nên value học vẫn đúng (game chưa thua).
+            if self.args.max_episode_pieces > 0 and self.env.tetrominoes >= self.args.max_episode_pieces:
+                break
+
             action = self.select_action()
             reward, done, next_state = self.env.step(action)
             total_reward += reward
@@ -279,8 +287,9 @@ class DQNAgent:
         # Train 1 LẦN mỗi episode (giống reference), không phải mỗi khối.
         # Train mỗi khối = ~40-100 updates/ván → policy xoay liên tục,
         # loss tăng dần và score dao động mạnh không ổn định được.
-        # Chờ buffer đủ lớn (10% memory_size = 3000 samples) mới bắt đầu.
-        if len(self.memory) > self.args.memory_size / 10:
+        # Warm-up: chờ đủ 3000 samples (cap ở 3000 để buffer to 100k
+        # không làm training bắt đầu trễ cả trăm episodes).
+        if len(self.memory) > min(3000, self.args.memory_size / 10):
             loss = self.train_step()
             self.total_loss += loss
             self.loss_count += 1
@@ -357,12 +366,29 @@ class DQNAgent:
             if (ep + 1) % 10 == 0:
                 self.target_net.load_state_dict(self.q_net.state_dict())
 
-            # Save best model mỗi khi đạt score cao mới
+            # Save best model mỗi khi đạt score cao mới.
+            # - Chỉ ghi file khi score >= min_save_score (bỏ qua best rác đầu run)
+            # - File kèm điểm trong tên: tetris_best_15025.pth
+            # - Có bản mạnh hơn thì XÓA file best cũ của run này → thư mục models
+            #   chỉ giữ đúng 1 bản best mạnh nhất mỗi run.
+            #   (Không đụng tới file best của các run TRƯỚC — tự dọn tay nếu muốn)
             if score > self.best_score:
-                print(f"New best score: {score:.0f} (previous: {self.best_score:.0f}) - saving model!")
                 self.best_score = score
-                best_path = os.path.join(self.args.save_path, "tetris_best.pth")
-                torch.save(self.q_net.state_dict(), best_path)
+                if score >= self.args.min_save_score:
+                    print(f"New best score: {score:.0f} - saving model!")
+                    scored_path = os.path.join(self.args.save_path, f"tetris_best_{score:.0f}.pth")
+                    torch.save(self.q_net.state_dict(), scored_path)
+                    torch.save(self.q_net.state_dict(),
+                               os.path.join(self.args.save_path, "tetris_best.pth"))
+
+                    # Xóa bản best yếu hơn mà run này đã lưu trước đó
+                    if self.last_best_path and self.last_best_path != scored_path \
+                            and os.path.exists(self.last_best_path):
+                        os.remove(self.last_best_path)
+                        print(f"  (đã xóa bản cũ: {os.path.basename(self.last_best_path)})")
+                    self.last_best_path = scored_path
+                else:
+                    print(f"New best score: {score:.0f} (< {self.args.min_save_score:.0f}, chưa lưu file)")
 
         # Save final model (q_net — target_net là bản copy cũ, có thể lệch tới 100 episodes)
         final_path = os.path.join(self.args.save_path, "tetris_final.pth")
@@ -396,18 +422,26 @@ def get_args():
                         help="Discount factor (default: 0.99)")
     parser.add_argument("--initial_eps", type=float, default=1.0,
                         help="Initial epsilon for exploration (default: 1.0)")
-    parser.add_argument("--final_eps", type=float, default=1e-3,
-                        help="Final epsilon for exploitation (default: 0.001)")
+    parser.add_argument("--final_eps", type=float, default=0.01,
+                        help="Final epsilon for exploitation (default: 0.01 — giữ 1%% "
+                             "nước random để buffer luôn có data đa dạng, policy sụp thì hồi nhanh hơn)")
     parser.add_argument("--decay_epochs", type=float, default=2000,
                         help="Episodes to decay epsilon (default: 2000)")
 
     # Memory & Save settings
-    parser.add_argument("--memory_size", type=int, default=30000,
-                        help="Replay buffer size (default: 30000)")
+    parser.add_argument("--memory_size", type=int, default=100000,
+                        help="Replay buffer size (default: 100000 — buffer to để "
+                             "1 ván dài không chiếm quá vài %% buffer, giảm catastrophic forgetting)")
+    parser.add_argument("--max_episode_pieces", type=int, default=2000,
+                        help="Cap số khối mỗi episode lúc TRAIN (default: 2000; 0 = không cap). "
+                             "Tránh 1 ván siêu dài flood replay buffer")
     parser.add_argument("--save_interval", type=int, default=100,
                         help="Save model every N episodes (default: 100)")
     parser.add_argument("--save_path", type=str, default="models",
                         help="Path to save models (default: models/)")
+    parser.add_argument("--min_save_score", type=float, default=1000,
+                        help="Chỉ lưu best model khi score >= ngưỡng này "
+                             "(default: 1000; tránh lưu các best rác đầu run)")
 
     # Visualization & Tracking
     parser.add_argument("--render", action="store_true",

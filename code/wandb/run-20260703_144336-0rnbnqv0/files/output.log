@@ -1,0 +1,187 @@
+
+======================================================================
+ TRAINING DQN AGENT
+======================================================================
+Device: cpu
+Episodes: 3000
+Batch size: 512
+Learning rate: 0.001
+Gamma: 0.99
+======================================================================
+Ep   10/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 0.0000 | ε: 0.996
+New best score: 11 (previous: 0) - saving model!
+Ep   20/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 0.0000 | ε: 0.991
+Ep   30/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 0.0000 | ε: 0.986
+Ep   40/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 0.0000 | ε: 0.981
+Ep   50/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 0.0000 | ε: 0.976
+Ep   60/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 0.0000 | ε: 0.971
+Ep   70/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 0.0000 | ε: 0.966
+Ep   80/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 0.0000 | ε: 0.961
+Ep   90/3000 | Score:      0 | Pieces:  22 | Lines:   0 | Loss: 0.0000 | ε: 0.956
+Ep  100/3000 | Score:      0 | Pieces:  15 | Lines:   0 | Loss: 0.0000 | ε: 0.951
+Ep  110/3000 | Score:      0 | Pieces:  18 | Lines:   0 | Loss: 0.0000 | ε: 0.946
+Ep  120/3000 | Score:      0 | Pieces:  15 | Lines:   0 | Loss: 0.0000 | ε: 0.941
+Ep  130/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 0.0000 | ε: 0.936
+Ep  140/3000 | Score:      0 | Pieces:  16 | Lines:   0 | Loss: 0.0000 | ε: 0.931
+Ep  150/3000 | Score:      0 | Pieces:  18 | Lines:   0 | Loss: 0.0000 | ε: 0.926
+Ep  160/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 36.2617 | ε: 0.921
+Ep  170/3000 | Score:      0 | Pieces:  14 | Lines:   0 | Loss: 25.8470 | ε: 0.916
+Ep  180/3000 | Score:      0 | Pieces:  17 | Lines:   0 | Loss: 18.8058 | ε: 0.911
+Ep  190/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 17.8995 | ε: 0.906
+Ep  200/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 18.0107 | ε: 0.901
+Ep  210/3000 | Score:      0 | Pieces:  16 | Lines:   0 | Loss: 20.5936 | ε: 0.896
+Ep  220/3000 | Score:      0 | Pieces:  17 | Lines:   0 | Loss: 20.1281 | ε: 0.891
+Ep  230/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 19.3297 | ε: 0.886
+Ep  240/3000 | Score:      0 | Pieces:  18 | Lines:   0 | Loss: 17.8570 | ε: 0.881
+Ep  250/3000 | Score:      0 | Pieces:  12 | Lines:   0 | Loss: 16.1714 | ε: 0.876
+Ep  260/3000 | Score:      0 | Pieces:  14 | Lines:   0 | Loss: 17.9256 | ε: 0.871
+Ep  270/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 17.4128 | ε: 0.866
+Ep  280/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 15.1769 | ε: 0.861
+Ep  290/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 14.4975 | ε: 0.856
+Ep  300/3000 | Score:      0 | Pieces:  18 | Lines:   0 | Loss: 12.1230 | ε: 0.851
+Ep  310/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 11.4232 | ε: 0.846
+Ep  320/3000 | Score:      0 | Pieces:  24 | Lines:   0 | Loss: 11.3779 | ε: 0.841
+Ep  330/3000 | Score:      0 | Pieces:  16 | Lines:   0 | Loss: 10.4810 | ε: 0.836
+Ep  340/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 9.7198 | ε: 0.831
+Ep  350/3000 | Score:      0 | Pieces:  15 | Lines:   0 | Loss: 9.3995 | ε: 0.826
+Ep  360/3000 | Score:      0 | Pieces:  22 | Lines:   0 | Loss: 10.0522 | ε: 0.821
+Ep  370/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 8.0543 | ε: 0.816
+Ep  380/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 7.4293 | ε: 0.811
+Ep  390/3000 | Score:     11 | Pieces:  25 | Lines:   1 | Loss: 7.0614 | ε: 0.806
+Ep  400/3000 | Score:      0 | Pieces:  17 | Lines:   0 | Loss: 7.0445 | ε: 0.801
+Ep  410/3000 | Score:      0 | Pieces:  17 | Lines:   0 | Loss: 7.4800 | ε: 0.796
+Ep  420/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 7.0394 | ε: 0.791
+Ep  430/3000 | Score:      0 | Pieces:  18 | Lines:   0 | Loss: 7.4580 | ε: 0.786
+Ep  440/3000 | Score:      0 | Pieces:  13 | Lines:   0 | Loss: 6.8444 | ε: 0.781
+Ep  450/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 7.3000 | ε: 0.776
+Ep  460/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 8.3022 | ε: 0.771
+Ep  470/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 8.0060 | ε: 0.766
+Ep  480/3000 | Score:      0 | Pieces:  18 | Lines:   0 | Loss: 7.4706 | ε: 0.761
+Ep  490/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 6.8606 | ε: 0.756
+Ep  500/3000 | Score:      0 | Pieces:  13 | Lines:   0 | Loss: 6.2015 | ε: 0.751
+Ep  510/3000 | Score:      0 | Pieces:  25 | Lines:   0 | Loss: 4.7338 | ε: 0.746
+Ep  520/3000 | Score:      0 | Pieces:  23 | Lines:   0 | Loss: 5.1597 | ε: 0.741
+Ep  530/3000 | Score:     11 | Pieces:  22 | Lines:   1 | Loss: 5.1276 | ε: 0.736
+Ep  540/3000 | Score:      0 | Pieces:  29 | Lines:   0 | Loss: 4.8032 | ε: 0.731
+Ep  550/3000 | Score:      0 | Pieces:  26 | Lines:   0 | Loss: 3.1481 | ε: 0.726
+New best score: 41 (previous: 11) - saving model!
+Ep  560/3000 | Score:      0 | Pieces:  17 | Lines:   0 | Loss: 3.3670 | ε: 0.721
+Ep  570/3000 | Score:      0 | Pieces:  28 | Lines:   0 | Loss: 3.7166 | ε: 0.716
+Ep  580/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 4.8736 | ε: 0.711
+Ep  590/3000 | Score:      0 | Pieces:  15 | Lines:   0 | Loss: 4.1766 | ε: 0.706
+Ep  600/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 4.0343 | ε: 0.701
+Ep  610/3000 | Score:      0 | Pieces:  22 | Lines:   0 | Loss: 3.2612 | ε: 0.696
+Ep  620/3000 | Score:      0 | Pieces:  23 | Lines:   0 | Loss: 3.4864 | ε: 0.691
+Ep  630/3000 | Score:     11 | Pieces:  23 | Lines:   1 | Loss: 3.1500 | ε: 0.686
+New best score: 91 (previous: 41) - saving model!
+Ep  640/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 3.6126 | ε: 0.681
+Ep  650/3000 | Score:      0 | Pieces:  23 | Lines:   0 | Loss: 4.0218 | ε: 0.676
+Ep  660/3000 | Score:      0 | Pieces:  25 | Lines:   0 | Loss: 3.3073 | ε: 0.671
+Ep  670/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 3.4841 | ε: 0.666
+Ep  680/3000 | Score:      0 | Pieces:  24 | Lines:   0 | Loss: 3.9642 | ε: 0.661
+Ep  690/3000 | Score:     11 | Pieces:  23 | Lines:   1 | Loss: 6.4257 | ε: 0.656
+Ep  700/3000 | Score:      0 | Pieces:  27 | Lines:   0 | Loss: 3.3417 | ε: 0.651
+Ep  710/3000 | Score:     11 | Pieces:  30 | Lines:   1 | Loss: 4.2510 | ε: 0.646
+Ep  720/3000 | Score:      0 | Pieces:  25 | Lines:   0 | Loss: 2.8872 | ε: 0.641
+Ep  730/3000 | Score:      0 | Pieces:  14 | Lines:   0 | Loss: 2.7833 | ε: 0.636
+Ep  740/3000 | Score:      0 | Pieces:  27 | Lines:   0 | Loss: 4.0575 | ε: 0.631
+Ep  750/3000 | Score:      0 | Pieces:  27 | Lines:   0 | Loss: 3.5403 | ε: 0.626
+Ep  760/3000 | Score:      0 | Pieces:  30 | Lines:   0 | Loss: 2.6326 | ε: 0.621
+Ep  770/3000 | Score:      0 | Pieces:  26 | Lines:   0 | Loss: 2.8798 | ε: 0.616
+Ep  780/3000 | Score:      0 | Pieces:  30 | Lines:   0 | Loss: 4.3041 | ε: 0.611
+Ep  790/3000 | Score:     11 | Pieces:  29 | Lines:   1 | Loss: 3.2607 | ε: 0.606
+Ep  800/3000 | Score:     22 | Pieces:  37 | Lines:   2 | Loss: 3.2532 | ε: 0.601
+Ep  810/3000 | Score:      0 | Pieces:  16 | Lines:   0 | Loss: 2.7843 | ε: 0.596
+Ep  820/3000 | Score:      0 | Pieces:  24 | Lines:   0 | Loss: 3.3123 | ε: 0.591
+Ep  830/3000 | Score:      0 | Pieces:  10 | Lines:   0 | Loss: 4.1644 | ε: 0.586
+Ep  840/3000 | Score:      0 | Pieces:  27 | Lines:   0 | Loss: 2.9413 | ε: 0.581
+Ep  850/3000 | Score:     11 | Pieces:  28 | Lines:   1 | Loss: 2.2945 | ε: 0.576
+Ep  860/3000 | Score:      0 | Pieces:  30 | Lines:   0 | Loss: 2.9944 | ε: 0.571
+Ep  870/3000 | Score:     11 | Pieces:  27 | Lines:   1 | Loss: 3.9531 | ε: 0.566
+Ep  880/3000 | Score:      0 | Pieces:  36 | Lines:   0 | Loss: 2.9834 | ε: 0.561
+Ep  890/3000 | Score:      0 | Pieces:  30 | Lines:   0 | Loss: 4.8652 | ε: 0.556
+Ep  900/3000 | Score:      0 | Pieces:  31 | Lines:   0 | Loss: 6.3346 | ε: 0.551
+Ep  910/3000 | Score:      0 | Pieces:  24 | Lines:   0 | Loss: 4.0910 | ε: 0.546
+Ep  920/3000 | Score:      0 | Pieces:  26 | Lines:   0 | Loss: 3.0018 | ε: 0.541
+Ep  930/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 3.8339 | ε: 0.536
+Ep  940/3000 | Score:      0 | Pieces:  29 | Lines:   0 | Loss: 4.0390 | ε: 0.531
+Ep  950/3000 | Score:     11 | Pieces:  29 | Lines:   1 | Loss: 3.3602 | ε: 0.526
+Ep  960/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 3.2610 | ε: 0.521
+Ep  970/3000 | Score:     11 | Pieces:  29 | Lines:   1 | Loss: 3.8351 | ε: 0.516
+Ep  980/3000 | Score:      0 | Pieces:  27 | Lines:   0 | Loss: 5.4259 | ε: 0.511
+Ep  990/3000 | Score:      0 | Pieces:  27 | Lines:   0 | Loss: 2.8903 | ε: 0.506
+Ep 1000/3000 | Score:      0 | Pieces:  28 | Lines:   0 | Loss: 3.9634 | ε: 0.501
+Ep 1010/3000 | Score:     41 | Pieces:  27 | Lines:   2 | Loss: 3.4202 | ε: 0.496
+Ep 1020/3000 | Score:      0 | Pieces:  25 | Lines:   0 | Loss: 6.4918 | ε: 0.491
+Ep 1030/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 5.0379 | ε: 0.486
+Ep 1040/3000 | Score:     11 | Pieces:  26 | Lines:   1 | Loss: 5.1452 | ε: 0.481
+Ep 1050/3000 | Score:      0 | Pieces:  25 | Lines:   0 | Loss: 4.2302 | ε: 0.476
+Ep 1060/3000 | Score:     11 | Pieces:  30 | Lines:   1 | Loss: 3.2487 | ε: 0.471
+Ep 1070/3000 | Score:     11 | Pieces:  26 | Lines:   1 | Loss: 4.1032 | ε: 0.466
+Ep 1080/3000 | Score:      0 | Pieces:  28 | Lines:   0 | Loss: 4.3778 | ε: 0.461
+Ep 1090/3000 | Score:      0 | Pieces:  30 | Lines:   0 | Loss: 4.0261 | ε: 0.456
+Ep 1100/3000 | Score:      0 | Pieces:  27 | Lines:   0 | Loss: 3.8802 | ε: 0.451
+Ep 1110/3000 | Score:      0 | Pieces:  28 | Lines:   0 | Loss: 3.9305 | ε: 0.446
+Ep 1120/3000 | Score:      0 | Pieces:  23 | Lines:   0 | Loss: 3.5265 | ε: 0.441
+Ep 1130/3000 | Score:      0 | Pieces:  26 | Lines:   0 | Loss: 6.1607 | ε: 0.436
+Ep 1140/3000 | Score:      0 | Pieces:  29 | Lines:   0 | Loss: 5.1228 | ε: 0.431
+Ep 1150/3000 | Score:      0 | Pieces:  26 | Lines:   0 | Loss: 6.5681 | ε: 0.426
+Ep 1160/3000 | Score:      0 | Pieces:  29 | Lines:   0 | Loss: 5.4171 | ε: 0.421
+Ep 1170/3000 | Score:      0 | Pieces:  34 | Lines:   0 | Loss: 5.5734 | ε: 0.416
+Ep 1180/3000 | Score:     11 | Pieces:  31 | Lines:   1 | Loss: 4.7266 | ε: 0.411
+Ep 1190/3000 | Score:     11 | Pieces:  35 | Lines:   1 | Loss: 5.5247 | ε: 0.406
+Ep 1200/3000 | Score:     22 | Pieces:  29 | Lines:   2 | Loss: 4.1911 | ε: 0.401
+Ep 1210/3000 | Score:     11 | Pieces:  28 | Lines:   1 | Loss: 4.0317 | ε: 0.396
+Ep 1220/3000 | Score:      0 | Pieces:  38 | Lines:   0 | Loss: 4.1547 | ε: 0.391
+Ep 1230/3000 | Score:     41 | Pieces:  33 | Lines:   2 | Loss: 5.2333 | ε: 0.386
+Ep 1240/3000 | Score:      0 | Pieces:  27 | Lines:   0 | Loss: 6.9804 | ε: 0.381
+Ep 1250/3000 | Score:      0 | Pieces:  24 | Lines:   0 | Loss: 3.9218 | ε: 0.376
+Ep 1260/3000 | Score:     41 | Pieces:  29 | Lines:   2 | Loss: 7.6925 | ε: 0.371
+Ep 1270/3000 | Score:     11 | Pieces:  27 | Lines:   1 | Loss: 5.5130 | ε: 0.366
+Ep 1280/3000 | Score:     11 | Pieces:  31 | Lines:   1 | Loss: 4.3818 | ε: 0.361
+Ep 1290/3000 | Score:     41 | Pieces:  30 | Lines:   2 | Loss: 4.4171 | ε: 0.356
+Ep 1300/3000 | Score:      0 | Pieces:  30 | Lines:   0 | Loss: 4.5465 | ε: 0.351
+Ep 1310/3000 | Score:      0 | Pieces:  36 | Lines:   0 | Loss: 6.8822 | ε: 0.346
+Ep 1320/3000 | Score:      0 | Pieces:  26 | Lines:   0 | Loss: 5.2713 | ε: 0.341
+Ep 1330/3000 | Score:     11 | Pieces:  38 | Lines:   1 | Loss: 6.2613 | ε: 0.336
+Ep 1340/3000 | Score:     11 | Pieces:  28 | Lines:   1 | Loss: 5.6328 | ε: 0.331
+Ep 1350/3000 | Score:      0 | Pieces:  23 | Lines:   0 | Loss: 7.7657 | ε: 0.326
+Ep 1360/3000 | Score:      0 | Pieces:  25 | Lines:   0 | Loss: 5.1919 | ε: 0.321
+Ep 1370/3000 | Score:     11 | Pieces:  28 | Lines:   1 | Loss: 6.1671 | ε: 0.316
+Ep 1380/3000 | Score:      0 | Pieces:  22 | Lines:   0 | Loss: 5.4876 | ε: 0.311
+Ep 1390/3000 | Score:     44 | Pieces:  38 | Lines:   4 | Loss: 10.6223 | ε: 0.306
+Ep 1400/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 7.4838 | ε: 0.301
+Ep 1410/3000 | Score:      0 | Pieces:  31 | Lines:   0 | Loss: 5.9124 | ε: 0.296
+Ep 1420/3000 | Score:     33 | Pieces:  35 | Lines:   3 | Loss: 6.5661 | ε: 0.291
+Ep 1430/3000 | Score:     11 | Pieces:  25 | Lines:   1 | Loss: 8.3764 | ε: 0.286
+Ep 1440/3000 | Score:     22 | Pieces:  32 | Lines:   2 | Loss: 11.6727 | ε: 0.281
+Ep 1450/3000 | Score:     22 | Pieces:  34 | Lines:   2 | Loss: 4.8374 | ε: 0.276
+Ep 1460/3000 | Score:     91 | Pieces:  29 | Lines:   3 | Loss: 7.3360 | ε: 0.271
+Ep 1470/3000 | Score:    113 | Pieces:  45 | Lines:   5 | Loss: 7.2391 | ε: 0.266
+New best score: 113 (previous: 91) - saving model!
+Ep 1480/3000 | Score:      0 | Pieces:  27 | Lines:   0 | Loss: 7.5905 | ε: 0.261
+Traceback (most recent call last):
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 429, in <module>
+    agent.train()
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 313, in train
+    score, pieces, lines, total_reward = self.play_episode()
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 263, in play_episode
+    action = self.select_action()
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 204, in select_action
+    return self._get_best_action(next_states)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 183, in _get_best_action
+    q_values = self.q_net(states_tensor).squeeze()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\AppData\Local\Programs\Python\Python311\Lib\site-packages\torch\nn\modules\module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\network.py", line 221, in forward
+    x = self.relu2(x)    # Apply ReLU non-linearity
+        ^^^^^^^^^^^^^
+KeyboardInterrupt

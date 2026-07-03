@@ -4,8 +4,9 @@ Tài liệu này tổng hợp toàn bộ thay đổi so với commit `f6266a7`, 
 bản cũ **về mặt toán học không thể học được**, còn bản mới đạt sức mạnh tương đương
 repo tham khảo [Tetris-deep-Q-learning-pytorch](https://github.com/uvipen/Tetris-deep-Q-learning-pytorch).
 
-**Kết quả:** bản cũ score luôn = 0 sau 300 epochs. Bản sửa đạt best score **1673**
-(57 lines/ván) sau 3000 epochs.
+**Kết quả:** bản cũ score luôn = 0 sau 300 epochs. Bản sửa (code = commit `e2f5fc8`):
+run tốt như `usual-sea-13` đạt **trung bình 1224 điểm / 66 lines mỗi ván** ở 100 epochs
+cuối (ván tốt nhất 788 lines); run `neat-star-9` có những ván đơn lẻ lên tới **268.921 điểm**.
 
 ---
 
@@ -125,6 +126,39 @@ python code/train.py --num_epochs 5000  # muốn đẩy tiếp giai đoạn expl
 
 > ⚠️ Model save trước các fix này (train trên feature sai) không dùng lại được —
 > phải train lại từ đầu.
+
+## 🔎 Checklist rà nhanh khi "train lại không ra kết quả cũ"
+
+Đã từng xảy ra thật (2026-07-03): train.py bị revert về bản lỗi mà không để ý,
+train lại mãi không ra kết quả như run `neat-star-9`. Rà 30 giây bằng cách check
+các dòng "vân tay" sau:
+
+**`code/train.py` — bản ĐÚNG phải có:**
+
+- `self.memory.append((state, reward, next_state, done))` **không** nằm sau `if reward >= 0`
+- `if len(self.memory) > self.args.memory_size / 10:` (không phải `/ 10000`)
+  và nằm **ngoài** vòng `while not self.env.game_over` (train 1 lần/episode)
+- Target net update: `if (ep + 1) % 10 == 0:` — **không** có điều kiện epsilon
+- Save best: `if score > self.best_score:` — **không** có điều kiện epsilon
+- Final: `torch.save(self.q_net.state_dict(), final_path)` (q_net, không phải target_net)
+
+**`code/tetris.py` — bản ĐÚNG phải có:**
+
+- `def _get_state_features(self, lines_cleared=0):` và `lines = lines_cleared`
+- Scan chiều cao: `for row in range(self.height):` (từ trên xuống)
+- `reward = 1 + (lines_cleared ** 2) * self.width`, game over `reward -= 2`
+
+Chuẩn nhất: `git diff e2f5fc8 -- code/tetris.py code/train.py` phải rỗng
+(hoặc chỉ khác comment) — `e2f5fc8` là commit đúng bản code của neat-star-9.
+
+**Và nhớ 2 điều về variance:**
+
+1. Code giống hệt nhau vẫn ra kết quả rất khác nhau giữa các run (không seed):
+   cùng bản code, 5 run cho avg score 100-epochs-cuối từ **26 → 1224**. Chạy
+   2-3 lần trước khi kết luận code hỏng.
+2. Đánh giá run bằng `game/avg_lines_100` / `avg_score_100` trên wandb, đừng
+   nhìn best score đơn lẻ: `neat-star-9` nổi tiếng nhờ vài ván spike 268k điểm
+   nhưng avg cuối run chỉ 39 điểm — `usual-sea-13` (avg 1224) mới là run ổn nhất.
 
 ## 📌 Bài học chung khi RL "không cải thiện"
 

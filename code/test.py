@@ -8,14 +8,27 @@ Usage:
     python test.py --model_path models/tetris_final.pth --num_games 50
     python test.py --model_path models/tetris_final.pth --infinite   # Infinite mode
     python test.py --model_path models/tetris_final.pth --infinite --speed 1.5
+    python test.py --model_path models/tetris_final.pth --infinite --harddrop  # Tắt animation rơi
 """
 
 import argparse
+import inspect
 import torch
 import numpy as np
 from copy import deepcopy
 from tetris import TetrisGame
 from network import DeepQNetwork
+
+# tetris.py có thể có hoặc không hỗ trợ callback soft drop (on_drop_step);
+# check signature để test.py chạy được với cả hai phiên bản
+SOFT_DROP_SUPPORTED = "on_drop_step" in inspect.signature(TetrisGame.step).parameters
+
+
+def step_env(env, action, on_drop=None):
+    """Gọi env.step, truyền callback soft drop nếu tetris.py hỗ trợ"""
+    if SOFT_DROP_SUPPORTED:
+        return env.step(action, on_drop_step=on_drop)
+    return env.step(action)
 
 
 class DQNTester:
@@ -26,7 +39,41 @@ class DQNTester:
         self.model = DeepQNetwork().to(self.device)
         self.model.load_state_dict(torch.load(model_path, map_location=self.device))
         self.model.eval()
+
+        # Runtime state cho infinite mode (đổi được bằng phím trong lúc chạy)
+        self.speed = 1.0
+        self.soft_drop = True
+
         print(f"✅ Model loaded: {model_path} ({self.device})\n")
+
+    def _handle_runtime_keys(self, event):
+        """Phím đổi drop mode / speed lúc đang chạy. Return True nếu đã xử lý.
+
+        D     : đổi soft drop <-> hard drop
+        1-9   : set speed = số đó (1x .. 9x)
+        ↑ / ↓ : tăng / giảm speed 0.5
+        """
+        import pygame
+        if event.type != pygame.KEYDOWN:
+            return False
+
+        if event.key == pygame.K_d:
+            self.soft_drop = not self.soft_drop
+            print(f"🔽 Drop mode: {'SOFT (rơi từng hàng)' if self.soft_drop else 'HARD (đặt thẳng xuống)'}")
+            return True
+        if pygame.K_1 <= event.key <= pygame.K_9:
+            self.speed = float(event.key - pygame.K_0)
+            print(f"⏩ Speed: {self.speed:.1f}x")
+            return True
+        if event.key in (pygame.K_UP, pygame.K_EQUALS, pygame.K_PLUS):
+            self.speed = min(20.0, self.speed + 0.5)
+            print(f"⏩ Speed: {self.speed:.1f}x")
+            return True
+        if event.key in (pygame.K_DOWN, pygame.K_MINUS):
+            self.speed = max(0.5, self.speed - 0.5)
+            print(f"⏪ Speed: {self.speed:.1f}x")
+            return True
+        return False
 
     def select_best_action(self, env):
         """Select best action using model"""
@@ -79,7 +126,8 @@ class DQNTester:
         font = pygame.font.Font(None, 24)
         info_x = env.width * block_sz + 10
         info = [f"Score: {env.score}", f"Pieces: {env.tetrominoes}", f"Lines: {env.cleared_lines}",
-                "", f"Action: x={action[0]}, r={action[1]}", f"Reward: {reward:+.1f}", f"Q: {q_value:.2f}"]
+                "", f"Action: x={action[0]}, r={action[1]}", f"Reward: {reward:+.1f}", f"Q: {q_value:.2f}",
+                "", f"Speed: {speed:.1f}x [1-9]", f"Drop: {'soft' if self.soft_drop else 'hard'} [D]"]
         for i, txt in enumerate(info):
             if txt:
                 screen.blit(font.render(txt, True, (200, 200, 200)), (info_x, 10 + i * 25))
@@ -88,7 +136,7 @@ class DQNTester:
         clock.tick(int(60 / speed))
         return screen, clock
 
-    def play_game(self, render=False, use_pygame=True, speed=1.0):
+    def play_game(self, render=False, use_pygame=True, speed=1.0, soft_drop=True):
         """Play one game"""
         env = TetrisGame(height=20, width=10)
         env.reset()
@@ -98,16 +146,16 @@ class DQNTester:
         while not env.game_over:
             action, q_val = self.select_best_action(env)
 
-            # Soft drop: render 1 frame mỗi hàng piece rơi (thay vì hard drop)
+            # Soft drop: render 1 frame mỗi hàng piece rơi (--harddrop để tắt)
             on_drop = None
-            if render and use_pygame:
+            if render and soft_drop and use_pygame:
                 def on_drop(a=action, q=q_val):
                     nonlocal screen, clock
                     screen, clock = self.render_pygame(env, a, 0.0, q, screen, clock, speed)
-            elif render:
+            elif render and soft_drop:
                 on_drop = lambda: env.render(block_size=20)
 
-            reward, _, _ = env.step(action, on_drop_step=on_drop)
+            reward, _, _ = step_env(env, action, on_drop)
 
             if render and use_pygame:
                 screen, clock = self.render_pygame(env, action, reward, q_val, screen, clock, speed)
@@ -123,14 +171,19 @@ class DQNTester:
 
         return env.score, env.tetrominoes, env.cleared_lines, step
 
-    def _play_infinite_game(self, speed=1.0, use_pygame=True):
+    def _play_infinite_game(self, speed=1.0, use_pygame=True, soft_drop=True):
         """Infinite game loop with restart/rewind"""
         import pygame
+
+        # Giá trị khởi đầu từ CLI, sau đó đổi được bằng phím lúc chạy
+        self.speed = speed
+        self.soft_drop = soft_drop
 
         print(f"{'=' * 60}")
         mode = "PYGAME" if use_pygame else "OPENCV"
         print(f"▶ RUNNING INFINITE {mode} MODE")
         print("Controls: SPACE → pause/resume | R → restart | Z → rewind | Q → quit")
+        print("          D → soft/hard drop | 1-9 → set speed | ↑/↓ → speed ±0.5")
         print(f"{'=' * 60}\n")
 
         game_count = 1
@@ -146,8 +199,10 @@ class DQNTester:
 
             while not env.game_over:
                 if use_pygame:
-                    screen, clock = self.render_pygame(env, last_action, last_reward, last_q, screen, clock, speed)
+                    screen, clock = self.render_pygame(env, last_action, last_reward, last_q, screen, clock, self.speed)
                     for event in pygame.event.get():
+                        if self._handle_runtime_keys(event):
+                            continue
                         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                             pygame.quit()
                             return
@@ -172,16 +227,27 @@ class DQNTester:
                     history.append(deepcopy(env))
                     last_action, last_q = self.select_best_action(env)
 
-                    # Soft drop: render từng hàng rơi thay vì nhảy thẳng xuống đáy
-                    if use_pygame:
-                        def on_drop():
-                            nonlocal screen, clock
+                    # Callback gọi ở mỗi hàng piece rơi. Luôn gắn callback để
+                    # bắt được phím D/1-9/↑↓ ngay giữa lúc piece đang rơi;
+                    # nếu đang ở hard drop thì chỉ pump event, không render
+                    # (piece rơi tức thì).
+                    def on_drop():
+                        nonlocal screen, clock
+                        if use_pygame:
+                            for event in pygame.event.get():
+                                if not self._handle_runtime_keys(event):
+                                    # Trả event khác (SPACE/R/Z/Q...) về queue
+                                    # cho vòng ngoài xử lý sau khi piece đáp
+                                    pygame.event.post(event)
+                        if not self.soft_drop:
+                            return
+                        if use_pygame:
                             screen, clock = self.render_pygame(
-                                env, last_action, last_reward, last_q, screen, clock, speed)
-                    else:
-                        on_drop = lambda: env.render(block_size=20)
+                                env, last_action, last_reward, last_q, screen, clock, self.speed)
+                        else:
+                            env.render(block_size=20)
 
-                    last_reward, _, _ = env.step(last_action, on_drop_step=on_drop)
+                    last_reward, _, _ = step_env(env, last_action, on_drop)
 
             print(f"Game {game_count} Over! Score: {env.score} | Lines: {env.cleared_lines}")
             if screen:
@@ -189,9 +255,9 @@ class DQNTester:
             input("Press Enter to continue...")
             game_count += 1
 
-    def test_games_infinite(self, speed=1.0):
+    def test_games_infinite(self, speed=1.0, soft_drop=True):
         """Infinite Pygame mode"""
-        self._play_infinite_game(speed=speed, use_pygame=True)
+        self._play_infinite_game(speed=speed, use_pygame=True, soft_drop=soft_drop)
 
     def test_games(self, num_games=10, use_pygame=True, speed=1.0):
         """Test multiple games and show stats"""
@@ -235,12 +301,14 @@ def main():
     parser.add_argument("--num_games", type=int, default=10, help="Number of games")
     parser.add_argument("--infinite", action="store_true", help="Infinite mode (R=restart, Z=rewind, Q=quit)")
     parser.add_argument("--speed", type=float, default=2.0, help="Speed multiplier (default: 2.0)")
+    parser.add_argument("--harddrop", action="store_true",
+                        help="Piece đặt thẳng xuống đáy (tắt animation soft drop)")
     args = parser.parse_args()
 
     try:
         tester = DQNTester(args.model_path)
         if args.infinite:
-            tester.test_games_infinite(speed=args.speed)
+            tester.test_games_infinite(speed=args.speed, soft_drop=not args.harddrop)
         else:
             tester.test_games(num_games=args.num_games, use_pygame=True, speed=args.speed)
     except FileNotFoundError:
