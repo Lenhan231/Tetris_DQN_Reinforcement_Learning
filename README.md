@@ -10,6 +10,7 @@ Learn Deep Reinforcement Learning by building an AI that plays Tetris. This proj
 - 📚 **Full learning path** → [LEARNING_PATH.md](LEARNING_PATH.md) (20 min, complete guide)
 - 🎨 **Visual learner** → [CONCEPTS_EXPLAINED.md](CONCEPTS_EXPLAINED.md) (30 min, diagrams & intuitions)
 - 📖 **Full index** → [docs/INDEX.md](docs/INDEX.md) (navigation for all docs)
+- 🐛 **Bug fix history** → [README_BUGFIXES.md](README_BUGFIXES.md) (vì sao bản đầu không học được & đã sửa gì)
 
 ---
 

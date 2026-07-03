@@ -97,7 +97,17 @@ class DQNTester:
 
         while not env.game_over:
             action, q_val = self.select_best_action(env)
-            reward, _, _ = env.step(action)
+
+            # Soft drop: render 1 frame mỗi hàng piece rơi (thay vì hard drop)
+            on_drop = None
+            if render and use_pygame:
+                def on_drop(a=action, q=q_val):
+                    nonlocal screen, clock
+                    screen, clock = self.render_pygame(env, a, 0.0, q, screen, clock, speed)
+            elif render:
+                on_drop = lambda: env.render(block_size=20)
+
+            reward, _, _ = env.step(action, on_drop_step=on_drop)
 
             if render and use_pygame:
                 screen, clock = self.render_pygame(env, action, reward, q_val, screen, clock, speed)
@@ -161,7 +171,17 @@ class DQNTester:
                 if not paused:
                     history.append(deepcopy(env))
                     last_action, last_q = self.select_best_action(env)
-                    last_reward, _, _ = env.step(last_action)
+
+                    # Soft drop: render từng hàng rơi thay vì nhảy thẳng xuống đáy
+                    if use_pygame:
+                        def on_drop():
+                            nonlocal screen, clock
+                            screen, clock = self.render_pygame(
+                                env, last_action, last_reward, last_q, screen, clock, speed)
+                    else:
+                        on_drop = lambda: env.render(block_size=20)
+
+                    last_reward, _, _ = env.step(last_action, on_drop_step=on_drop)
 
             print(f"Game {game_count} Over! Score: {env.score} | Lines: {env.cleared_lines}")
             if screen:

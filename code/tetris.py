@@ -291,12 +291,15 @@ class TetrisGame:
 
         return (lines, holes, bumpiness, sum(heights))
 
-    def step(self, action):
+    def step(self, action, on_drop_step=None):
         """Thực hiện 1 action (move + drop)
 
         Action:
         - action[0] (x_pos): vị trí ngang nơi đặt piece (0-10)
         - action[1] (num_rotations): số lần xoay piece (0-3)
+
+        on_drop_step: callback gọi ở MỖI hàng piece rơi xuống (dùng để render
+        animation soft drop khi test). None = rơi tức thì (train nhanh).
 
         Workflow:
         1. Xoay piece num_rotations lần
@@ -324,11 +327,13 @@ class TetrisGame:
         self.piece_x = max(0, min(x_pos, self.width - len(piece[0])))
         self.current_piece = piece
 
-        # 3. Drop piece: tìm y cuối cùng trước collision
-        self.piece_y = 0
-        while not self._check_collision(self.current_piece, self.piece_x, self.piece_y):
+        # 3. Drop piece: rơi từng hàng một, dừng ở hàng cuối cùng không collision
+        # (piece_y = -1 nếu không fit ngay từ đầu → game over ở bước 4)
+        self.piece_y = -1
+        while not self._check_collision(self.current_piece, self.piece_x, self.piece_y + 1):
             self.piece_y += 1
-        self.piece_y -= 1  # Lùi 1 bước (lần trước là collision)
+            if on_drop_step is not None:
+                on_drop_step()  # render 1 frame ở vị trí hiện tại (soft drop)
 
         # 4. Lock piece lên board (chỉ nếu piece_y >= 0, tức piece fit trên board)
         if self.piece_y >= 0:
