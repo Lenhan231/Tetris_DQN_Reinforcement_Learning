@@ -244,31 +244,36 @@ class TetrisGame:
 
         return num_lines, points
 
-    def _get_state_features(self):
+    def _get_state_features(self, lines_cleared=0):
         """Trích xuất 4 features từ board state (dùng cho neural network)
 
         Features:
-        1. lines_cleared: Số hàng đã xóa (reward - tốt nếu cao)
+        1. lines_cleared: Số hàng xóa bởi NƯỚC ĐI vừa rồi/đang simulate,
+           KHÔNG phải tổng cộng dồn cả ván (cộng dồn sẽ giống nhau cho mọi
+           action trong get_next_states và non-stationary theo thời gian)
         2. holes: Số ô trống bị che phủ (penalty - xấu nếu cao)
         3. bumpiness: Độ gồ ghề bề mặt (penalty - xấu nếu cao)
         4. height: Tổng chiều cao các cột (penalty - xấu nếu cao)
 
+        Args:
+            lines_cleared: số hàng xóa bởi nước đi tạo ra board hiện tại
+
         Return:
             (lines_cleared, holes, bumpiness, total_height)
         """
-        lines = self.cleared_lines
+        lines = lines_cleared
         holes = 0
         heights = []
 
         for col in range(self.width):
             height = 0
-            block_found = False
 
-            # Scan từ dưới lên để tìm chiều cao
-            for row in range(self.height - 1, -1, -1):
+            # Scan từ TRÊN xuống: ô có khối đầu tiên = đỉnh cột.
+            # (Scan từ dưới lên sẽ lấy khối THẤP nhất — cột nào chạm đáy
+            # luôn ra height=1, làm total_height và bumpiness sai hết)
+            for row in range(self.height):
                 if self.board[row][col] != 0:
                     height = self.height - row
-                    block_found = True
                     break
 
             heights.append(height)
@@ -337,28 +342,20 @@ class TetrisGame:
         lines_cleared, points = self._clear_full_lines()
         self.score += points
         self.cleared_lines += lines_cleared
-        reward = points  # Primary reward: line clear points
 
-        # Reward shaping: encourage good board states
-        # (Agent learns WHAT makes good states, not just from rare line clears)
-        # if lines_cleared == 0:  # Nếu không clear line nào, đánh giá state hiện tại
-        state_features = self._get_state_features()
-        lines, holes, bumpiness, height = state_features
-        # height is total height of all columns (tall = bad)
-        # Penalize bad states (negative reward = discourage)
-        # Normalize by typical max values
-        reward -= 0.5 * (height)          # Tall = bad (risk of game over)
-        reward -= 0.36 * (holes)           # Holes = bad (blocks future)
-        reward -= 0.2 * (bumpiness)      # Bumpy = bad (inefficient)
+        # Reward: +1 survival bonus mỗi khối đặt được + thưởng lớn khi xóa hàng
+        # (+1 dày đặc dạy agent "sống lâu = tốt"; chỉ thưởng khi xóa hàng thì
+        # tín hiệu quá thưa, agent random gần như không bao giờ nhận reward)
+        reward = 1 + (lines_cleared ** 2) * self.width
 
         # 6. Spawn piece mới
         self._spawn_new_piece()
 
         # 7. Penalty nếu game over
         if self.game_over:
-            reward -= 10  # Strong penalty for game over
+            reward -= 2
 
-        return reward, self.game_over, self._get_state_features()
+        return reward, self.game_over, self._get_state_features(lines_cleared)
 
     def get_next_states(self):
         """Enumerate tất cả possible next states (dùng cho AI planning)
@@ -410,16 +407,20 @@ class TetrisGame:
                             if 0 <= by < self.height and 0 <= bx < self.width:
                                 temp_board[by][bx] = piece[py][px]
 
-                # Simulate: clear lines
+                # Simulate: clear lines — del HẾT rồi mới insert (giống
+                # _clear_full_lines). Insert trong loop làm index dịch xuống,
+                # xóa nhầm hàng khi clear 2+ hàng cùng lúc.
                 full_lines = [r for r in range(self.height) if 0 not in temp_board[r]]
                 for r in sorted(full_lines, reverse=True):
                     del temp_board[r]
+                for _ in range(len(full_lines)):
                     temp_board.insert(0, [0] * self.width)
 
                 # Extract features từ board copy (không thay đổi board thật)
+                # Truyền số hàng vừa xóa trong simulation làm feature "lines"
                 original_board = self.board
                 self.board = temp_board
-                features = self._get_state_features()
+                features = self._get_state_features(len(full_lines))
                 self.board = original_board
 
                 # Lưu vào dict

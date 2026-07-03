@@ -1,0 +1,31 @@
+{
+  "os": "Windows-10-10.0.26200-SP0",
+  "python": "CPython 3.11.9",
+  "startedAt": "2026-07-03T00:56:03.390439Z",
+  "args": [
+    "--wandb"
+  ],
+  "program": "C:\\Users\\nhanl\\OneDrive\\Desktop\\School\\REL301m\\tetris_from_scratch\\code\\train.py",
+  "codePath": "code\\train.py",
+  "codePathLocal": "train.py",
+  "git": {
+    "remote": "https://github.com/Lenhan231/Tetris-Reinforcementlearning.git",
+    "commit": "f6266a7d2a0cc9dc69ab0d371457d51de0d5e267"
+  },
+  "email": "nhanle221199@gmail.com",
+  "root": "C:\\Users\\nhanl\\OneDrive\\Desktop\\School\\REL301m\\tetris_from_scratch\\code",
+  "host": "DESKTOP-TISCMD1",
+  "executable": "C:\\Users\\nhanl\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+  "cpu_count": 4,
+  "cpu_count_logical": 8,
+  "disk": {
+    "/": {
+      "total": "511029800960",
+      "used": "189652885504"
+    }
+  },
+  "memory": {
+    "total": "8365002752"
+  },
+  "writerId": "485dv0cbjpzu9l6bzi2d9zdevmnpkfmj"
+}

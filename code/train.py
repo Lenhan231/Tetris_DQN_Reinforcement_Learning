@@ -63,12 +63,12 @@ Q-VALUE:
 ═════════════════════════════════════════════════════════════════════════════
 
 Chạy:
-  python train.py --num_epochs 300
+  python train.py --num_epochs 3000
 
-  python train.py --num_epochs 300 --render
+  python train.py --num_epochs 3000 --render
   (show live game rendering while training)
 
-  python train.py --num_epochs 300 --wandb
+  python train.py --num_epochs 3000 --wandb
   (track game + model metrics in Weights & Biases dashboard)
   └─ Game metrics: avg_score/100, avg_rewards/100, best_lines/100, avg_pieces/100, avg_lines/100
   └─ Model metrics: loss, epsilon
@@ -268,18 +268,22 @@ class DQNAgent:
             if self.render_enabled:
                 self.env.render()
 
-            # Lưu experience vào buffer
-            if reward >= 0:
-                self.memory.append((state, reward, next_state, done))
+            # Lưu experience vào buffer — LUÔN lưu, kể cả reward âm.
+            # (Lọc reward >= 0 sẽ vứt hết transition game-over/done=True,
+            # agent không bao giờ học được rằng thua là xấu)
+            self.memory.append((state, reward, next_state, done))
 
             # Update state cho vòng lặp tiếp theo
             state = next_state
 
-            # Train periodically (khi buffer có đủ samples)
-            if len(self.memory) > self.args.memory_size / 10000:
-                loss = self.train_step()
-                self.total_loss += loss
-                self.loss_count += 1
+        # Train 1 LẦN mỗi episode (giống reference), không phải mỗi khối.
+        # Train mỗi khối = ~40-100 updates/ván → policy xoay liên tục,
+        # loss tăng dần và score dao động mạnh không ổn định được.
+        # Chờ buffer đủ lớn (10% memory_size = 3000 samples) mới bắt đầu.
+        if len(self.memory) > self.args.memory_size / 10:
+            loss = self.train_step()
+            self.total_loss += loss
+            self.loss_count += 1
 
         return self.env.score, self.env.tetrominoes, self.env.cleared_lines, total_reward
 
@@ -347,32 +351,22 @@ class DQNAgent:
                     "model/epsilon": self._get_epsilon(),
                 })
 
-            
-            if self._get_epsilon() != 0.001 and (ep + 1) % 100 == 0:
-                # Save model
-                print(f"Saving model at episode {ep + 1}...")
-                self.target_net.load_state_dict(self.q_net.state_dict()) 
+            # Update target network mỗi 10 episodes. Giờ chỉ train 1 lần/episode
+            # nên 10 episodes = 10 gradient steps — target 100 episodes sẽ quá cũ
+            # (trước đây train mỗi khối nên 100 episodes mới hợp lý)
+            if (ep + 1) % 10 == 0:
+                self.target_net.load_state_dict(self.q_net.state_dict())
 
-           
-           # Update target network with BEST model when new best is found
-            if self._get_epsilon() == 0.001 and score > self.best_score:
+            # Save best model mỗi khi đạt score cao mới
+            if score > self.best_score:
                 print(f"New best score: {score:.0f} (previous: {self.best_score:.0f}) - saving model!")
                 self.best_score = score
+                best_path = os.path.join(self.args.save_path, "tetris_best.pth")
+                torch.save(self.q_net.state_dict(), best_path)
 
-                best_path = os.path.join(
-                    self.args.save_path,
-                    "tetris_best.pth"
-                )
-
-                torch.save(
-                    self.q_net.state_dict(),
-                    best_path
-                )
-
-                
-        # Save final model
+        # Save final model (q_net — target_net là bản copy cũ, có thể lệch tới 100 episodes)
         final_path = os.path.join(self.args.save_path, "tetris_final.pth")
-        torch.save(self.target_net.state_dict(), final_path)
+        torch.save(self.q_net.state_dict(), final_path)
         print(f"\n✅ Training complete!")
         print(f"Final model: {final_path}")
         return self.q_net
@@ -389,8 +383,9 @@ def get_args():
                         help="Board height (default: 20)")
 
     # Training settings
-    parser.add_argument("--num_epochs", type=int, default=100,
-                        help="Number of episodes to train (default: 100)")
+    parser.add_argument("--num_epochs", type=int, default=3000,
+                        help="Number of episodes to train (default: 3000; "
+                             "cần > decay_epochs=2000 để agent có giai đoạn exploit)")
     parser.add_argument("--batch_size", type=int, default=512,
                         help="Batch size for training (default: 512)")
     parser.add_argument("--lr", type=float, default=1e-3,
