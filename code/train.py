@@ -1,79 +1,3 @@
-"""
-STEP 4: DQN TRAINING AGENT
-==========================
-Mục đích: Huấn luyện Deep Q-Network để chơi Tetris tốt hơn
-
-═════════════════════════════════════════════════════════════════════════════
-TRAINING WORKFLOW (từng step):
-═════════════════════════════════════════════════════════════════════════════
-
-1. PLAY EPISODE
-   └─ Agent chơi 1 game đầy đủ
-   └─ Mỗi step: chọn action → nhận reward → lưu experience
-
-2. STORE EXPERIENCE (Replay Buffer)
-   └─ Lưu (state, reward, next_state, done) vào memory
-   └─ Giúp break correlation giữa samples
-
-3. SAMPLE BATCH
-   └─ Lấy random batch từ buffer (vd: 512 samples)
-   └─ Tính Q-values dựa trên batch
-
-4. COMPUTE TARGET Q-VALUES (Bellman Equation)
-   └─ Nếu game chưa over: Q_target = reward + γ * max_Q(next_state)
-   └─ Nếu game over: Q_target = reward
-   └─ γ (gamma) = 0.99 = discount factor (future reward ít quan trọng hơn hiện tại)
-
-5. UPDATE NETWORK
-   └─ Loss = MSE(Q_predicted - Q_target)
-   └─ Backprop và update Q_net weights
-
-6. UPDATE TARGET NETWORK
-   └─ Mỗi 100 episodes: copy Q_net → target_net
-   └─ Target network dùng để tính Q_target (stable)
-
-═════════════════════════════════════════════════════════════════════════════
-KEY CONCEPTS:
-═════════════════════════════════════════════════════════════════════════════
-
-EPSILON-GREEDY STRATEGY (Explore vs Exploit):
-  Early epochs (ε=1.0):  100% random explore → tìm hiểu toàn bộ
-  Late epochs (ε=0.01):  99% best action, giữ 1% random để data luôn đa dạng
-  Decay: linear qua 2000 epochs
-
-REPLAY BUFFER:
-  - Mỗi step lưu 1 experience: (state, reward, next_state, done)
-  - Max 100,000 experiences (cũ nhất xóa) — to để 1 ván dài không flood buffer
-  - Lấy random batch để train (tránh overfitting sequential data)
-
-TARGET NETWORK:
-  - Copy của Q_net dùng để tính Q_target (ổn định)
-  - Update mỗi 100 episodes (tránh chasing moving target)
-
-STATE FEATURES (từ step1, TetrisGame._get_state_features):
-  - lines_cleared: số hàng vừa xóa (tốt = cao)
-  - holes: ô trống bị che phủ (tốt = thấp)
-  - bumpiness: độ gồ ghề bề mặt (tốt = thấp)
-  - total_height: tổng chiều cao các cột (tốt = thấp)
-
-Q-VALUE:
-  Q(state, action) = kỳ vọng reward từ state này nếu chọn action này
-  Network học mapping: state → Q-value của mỗi action
-
-═════════════════════════════════════════════════════════════════════════════
-
-Chạy:
-  python train.py --num_epochs 3000
-
-  python train.py --num_epochs 3000 --render
-  (show live game rendering while training)
-
-  python train.py --num_epochs 3000 --wandb
-  (track game + model metrics in Weights & Biases dashboard)
-  └─ Game metrics: avg_score/100, avg_rewards/100, best_lines/100, avg_pieces/100, avg_lines/100
-  └─ Model metrics: loss, epsilon
-"""
-
 import argparse
 import os
 import torch
@@ -81,12 +5,8 @@ import torch.nn as nn
 from collections import deque
 from random import random, sample, choice
 import numpy as np
-
-try:
-    import wandb
-    WANDB_AVAILABLE = True
-except ImportError:
-    WANDB_AVAILABLE = False
+from wandb_config import WandBTracker, WANDB_AVAILABLE
+import wandb
 
 from tetris import TetrisGame
 from network import DeepQNetwork
@@ -106,8 +26,8 @@ class DQNAgent:
         self.render_enabled = getattr(args, 'render', False)
 
         # Neural Networks
-        self.q_net = DeepQNetwork().to(self.device)  # Network chính (cập nhật mỗi step)
-        self.target_net = DeepQNetwork().to(self.device)  # Network phụ (cập nhật mỗi 100 steps)
+        self.q_net = DeepQNetwork().to(self.device) 
+        self.target_net = DeepQNetwork().to(self.device)  
         self.target_net.load_state_dict(self.q_net.state_dict())
 
         # Optimizer & Loss function
@@ -117,46 +37,26 @@ class DQNAgent:
         # Replay buffer: lưu (state, reward, next_state, done)
         self.memory = deque(maxlen=args.memory_size)
         self.best_score = 0.0
-        self.last_best_path = None  # file best gần nhất của run này (để xóa khi có bản mạnh hơn)
+        self.last_best_path = None  
 
         # Tracking progress
         self.episode = 0
         self.total_loss = 0.0
         self.loss_count = 0
 
-        # WandB tracking (optional)
-        self.use_wandb = args.wandb and WANDB_AVAILABLE
+        # WandB tracking
+        self.use_wandb = getattr(args, 'wandb', False) and WANDB_AVAILABLE
         if self.use_wandb:
-            wandb.init(
-                project="tetris-dqn",
-                config={
-                    "num_epochs": args.num_epochs,
-                    "batch_size": args.batch_size,
-                    "lr": args.lr,
-                    "gamma": args.gamma,
-                    "initial_eps": args.initial_eps,
-                    "final_eps": args.final_eps,
-                    "decay_epochs": args.decay_epochs,
-                }
-            )
-
-        # Metrics for WandB (per 100 epochs)
+            self.wandb_tracker = WandBTracker(args)
+        
+        # Metrics storage for logging
         self.epoch_scores = []
         self.epoch_pieces = []
         self.epoch_lines = []
-        self.epoch_losses = []
         self.epoch_rewards = []
+        self.epoch_losses = []
 
     def _get_epsilon(self):
-        """Epsilon decay: 1.0 → 0.001 qua decay_epochs
-
-        Công thức: ε = final_ε + max(decay_epochs - episode, 0) * (initial_ε - final_ε) / decay_epochs
-
-        Kết quả:
-        - Episode 0: ε = 1.0 (100% explore)
-        - Episode 1000: ε = 0.5 (50% explore)
-        - Episode 2000+: ε = 0.001 (99.9% exploit)
-        """
         return self.args.final_eps + max(
             self.args.decay_epochs - self.episode, 0
         ) * (self.args.initial_eps - self.args.final_eps) / self.args.decay_epochs
@@ -186,22 +86,12 @@ class DQNAgent:
             return actions[best_idx]
 
     def select_action(self):
-        """Chọn action dùng ε-greedy strategy
-
-        - Xác suất ε: random action (explore)
-        - Xác suất 1-ε: best action từ Q-network (exploit)
-
-        Return:
-            action: (x_pos, num_rotations)
-        """
         eps = self._get_epsilon()
         next_states = self.env.get_next_states()
 
         if random() < eps:
-            # EXPLORE: random action
             return choice(list(next_states.keys())) if next_states else (0, 0)
         else:
-            # EXPLOIT: best action từ Q-network
             return self._get_best_action(next_states)
 
     def train_step(self):
@@ -260,11 +150,8 @@ class DQNAgent:
         state = self.env._get_state_features()
         total_reward = 0.0
 
+        # catastrophic forgetting handlling
         while not self.env.game_over:
-            # Cap độ dài episode lúc train: 1 ván 3000+ khối một mình chiếm
-            # cả chục % buffer → network chỉ ôn trạng thái đẹp rồi quên trạng
-            # thái xấu (catastrophic forgetting). Cắt ván tại đây, transition
-            # cuối vẫn done=False nên value học vẫn đúng (game chưa thua).
             if self.args.max_episode_pieces > 0 and self.env.tetrominoes >= self.args.max_episode_pieces:
                 break
 
@@ -282,7 +169,6 @@ class DQNAgent:
             reward -= self.args.shape_height * (next_state[3] - state[3])
             total_reward += reward
 
-            # Render nếu enabled
             if self.render_enabled:
                 self.env.render()
 
@@ -300,12 +186,7 @@ class DQNAgent:
         return self.env.score, self.env.tetrominoes, self.env.cleared_lines, total_reward
 
     def train(self):
-        """Main training loop: chơi N episodes, track progress, save models
 
-        Mỗi 10 episodes: in log (score, loss)
-        Mỗi 100 episodes: update target network
-        Mỗi save_interval episodes: save model
-        """
         print("\n" + "=" * 70)
         print(" TRAINING DQN AGENT")
         print("=" * 70)
@@ -314,6 +195,11 @@ class DQNAgent:
         print(f"Batch size: {self.args.batch_size}")
         print(f"Learning rate: {self.args.lr}")
         print(f"Gamma: {self.args.gamma}")
+        print(f"Initial epsilon: {self.args.initial_eps}")
+        print(f"Final epsilon: {self.args.final_eps}")
+        print(f"Epsilon decay episodes: {self.args.decay_epochs}")
+        print(f"Replay buffer size: {self.args.memory_size}")
+        print(f"Max episode pieces: {self.args.max_episode_pieces}")
         print("=" * 70)
 
         os.makedirs(self.args.save_path, exist_ok=True)
@@ -321,25 +207,17 @@ class DQNAgent:
         for ep in range(self.args.num_epochs):
             self.episode = ep
 
-            # Chơi 1 episode
             score, pieces, lines, total_reward = self.play_episode()
 
-            # Save best TRƯỚC khi gradient update: model lưu ra file phải đúng
-            # là bộ trọng số ĐÃ CHƠI ván điểm cao này. (Save sau update thì
-            # thành model "hậu duệ" — lệch 1 bước học, không phải bản đã chơi.)
             # - Chỉ ghi file khi score >= min_save_score (bỏ qua best rác đầu run)
             # - File kèm điểm trong tên: tetris_best_15025.pth
             # - Có bản mạnh hơn thì XÓA file best cũ của run này
-            #   (không đụng file best của các run TRƯỚC — tự dọn tay nếu muốn)
             if score > self.best_score:
                 self.best_score = score
                 if score >= self.args.min_save_score:
                     print(f"New best score: {score:.0f} - saving model!")
                     scored_path = os.path.join(self.args.save_path, f"tetris_best_{score:.0f}.pth")
                     torch.save(self.q_net.state_dict(), scored_path)
-                    torch.save(self.q_net.state_dict(),
-                               os.path.join(self.args.save_path, "tetris_best.pth"))
-
                     # Xóa bản best yếu hơn mà run này đã lưu trước đó
                     if self.last_best_path and self.last_best_path != scored_path \
                             and os.path.exists(self.last_best_path):
@@ -349,13 +227,16 @@ class DQNAgent:
                 else:
                     print(f"New best score: {score:.0f} (< {self.args.min_save_score:.0f}, chưa lưu file)")
 
-            # Train 1 LẦN mỗi episode (giống reference), không phải mỗi khối.
-            # Warm-up: chờ đủ 3000 samples (cap 3000 để buffer to 100k
+            # Warm-up: chờ đủ 3000 samples (cap 3000 để buffer không quá nhỏ, tránh catastrophic forgetting
             # không làm training bắt đầu trễ cả trăm episodes).
             if len(self.memory) > min(3000, self.args.memory_size / 10):
                 loss = self.train_step()
                 self.total_loss += loss
                 self.loss_count += 1
+
+            # Update target network after every N episodes (default: 100)
+            if (ep + 1) % self.args.target_update == 0:
+                self.target_net.load_state_dict(self.q_net.state_dict())
 
             # Collect metrics
             self.epoch_scores.append(score)
@@ -364,6 +245,7 @@ class DQNAgent:
             self.epoch_rewards.append(total_reward)
             self.epoch_losses.append(self.total_loss / self.loss_count if self.loss_count > 0 else 0)
 
+            # Just log notthing more    
             # Log progress (mỗi 10 episodes)
             if (ep + 1) % 10 == 0:
                 avg_loss = (self.total_loss / self.loss_count) if self.loss_count > 0 else 0
@@ -378,35 +260,24 @@ class DQNAgent:
                 self.loss_count = 0
 
             # Log to WandB (mỗi 100 episodes)
-            if (ep + 1) % 100 == 0 and self.use_wandb:
-                avg_score = np.mean(self.epoch_scores[-100:])
-                avg_pieces = np.mean(self.epoch_pieces[-100:])
-                avg_lines = np.mean(self.epoch_lines[-100:])
-                avg_rewards = np.mean(self.epoch_rewards[-100:])
-                avg_loss = np.mean(self.epoch_losses[-100:])
+            if (ep + 1) % self.args.log_interval == 0 and self.use_wandb:
+                avg_score = np.mean(self.epoch_scores[-self.args.log_interval:])
+                avg_pieces = np.mean(self.epoch_pieces[-self.args.log_interval:])
+                avg_lines = np.mean(self.epoch_lines[-self.args.log_interval:])
+                avg_rewards = np.mean(self.epoch_rewards[-self.args.log_interval:])
+                avg_loss = np.mean(self.epoch_losses[-self.args.log_interval:])
 
                 wandb.log({
                     "epoch": ep + 1,
-                    "game/avg_score_100": avg_score,
-                    "game/best_lines_100": max(self.epoch_lines[-100:]),
-                    "game/avg_pieces_100": avg_pieces,
-                    "game/avg_lines_100": avg_lines,
-                    "game/avg_rewards_100": avg_rewards,
+                    "game/avg_score_" + str(self.args.log_interval): avg_score,
+                    "game/best_lines_" + str(self.args.log_interval): max(self.epoch_lines[-self.args.log_interval:]),
+                    "game/avg_pieces_" + str(self.args.log_interval): avg_pieces,
+                    "game/avg_lines_" + str(self.args.log_interval): avg_lines,
+                    "game/avg_rewards_" + str(self.args.log_interval): avg_rewards,
                     "model/loss": avg_loss,
                     "model/epsilon": self._get_epsilon(),
                 })
 
-            # Update target network mỗi 10 episodes. Giờ chỉ train 1 lần/episode
-            # nên 10 episodes = 10 gradient steps — target 100 episodes sẽ quá cũ
-            # (trước đây train mỗi khối nên 100 episodes mới hợp lý)
-            if (ep + 1) % 10 == 0:
-                self.target_net.load_state_dict(self.q_net.state_dict())
-
-        # Save final model (q_net — target_net là bản copy cũ, có thể lệch tới 100 episodes)
-        final_path = os.path.join(self.args.save_path, "tetris_final.pth")
-        torch.save(self.q_net.state_dict(), final_path)
-        print(f"\n✅ Training complete!")
-        print(f"Final model: {final_path}")
         return self.q_net
 
 
@@ -439,6 +310,8 @@ def get_args():
                              "nước random để buffer luôn có data đa dạng, policy sụp thì hồi nhanh hơn)")
     parser.add_argument("--decay_epochs", type=float, default=2000,
                         help="Episodes to decay epsilon (default: 2000)")
+    parser.add_argument("--target_update", type=int, default=10,
+                        help="Episodes to update target network (default: 10)")
 
     # Memory & Save settings
     parser.add_argument("--memory_size", type=int, default=100000,
@@ -468,6 +341,9 @@ def get_args():
                         help="Enable live rendering during training")
     parser.add_argument("--wandb", action="store_true",
                         help="Track metrics with Weights & Biases (install: pip install wandb)")
+    parser.add_argument("--log_interval", type=int, default=100,
+                    help="Log to WandB every N episodes (default: 100)")
+
 
     return parser.parse_args()
 

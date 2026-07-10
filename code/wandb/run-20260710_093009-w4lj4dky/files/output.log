@@ -1,0 +1,17 @@
+
+======================================================================
+ TRAINING DQN AGENT
+======================================================================
+Device: cpu
+Episodes: 3000
+Batch size: 512
+Learning rate: 0.001
+Gamma: 0.99
+======================================================================
+Traceback (most recent call last):
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 375, in <module>
+    agent.train()
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 258, in train
+    self.epoch_scores.append(score)
+    ^^^^^^^^^^^^^^^^^
+AttributeError: 'DQNAgent' object has no attribute 'epoch_scores'

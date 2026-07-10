@@ -1,0 +1,46 @@
+
+======================================================================
+ TRAINING DQN AGENT
+======================================================================
+Device: cpu
+Episodes: 3000
+Batch size: 512
+Learning rate: 0.001
+Gamma: 0.99
+======================================================================
+Ep   10/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 0.0000 | ε: 0.996
+Ep   20/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 0.0000 | ε: 0.991
+Ep   30/3000 | Score:      0 | Pieces:  18 | Lines:   0 | Loss: 0.0000 | ε: 0.986
+New best score: 11 (< 1000, chưa lưu file)
+Ep   40/3000 | Score:      0 | Pieces:  21 | Lines:   0 | Loss: 0.0000 | ε: 0.981
+Ep   50/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 0.0000 | ε: 0.976
+Ep   60/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 0.0000 | ε: 0.971
+Ep   70/3000 | Score:      0 | Pieces:  18 | Lines:   0 | Loss: 0.0000 | ε: 0.966
+Ep   80/3000 | Score:      0 | Pieces:  23 | Lines:   0 | Loss: 0.0000 | ε: 0.961
+Ep   90/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 0.0000 | ε: 0.956
+Ep  100/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 0.0000 | ε: 0.951
+Ep  110/3000 | Score:      0 | Pieces:  13 | Lines:   0 | Loss: 0.0000 | ε: 0.946
+Ep  120/3000 | Score:      0 | Pieces:  14 | Lines:   0 | Loss: 0.0000 | ε: 0.941
+Ep  130/3000 | Score:      0 | Pieces:  16 | Lines:   0 | Loss: 0.0000 | ε: 0.936
+Ep  140/3000 | Score:      0 | Pieces:  16 | Lines:   0 | Loss: 0.0000 | ε: 0.931
+Ep  150/3000 | Score:      0 | Pieces:  14 | Lines:   0 | Loss: 0.0000 | ε: 0.926
+Ep  160/3000 | Score:      0 | Pieces:  22 | Lines:   0 | Loss: 0.0000 | ε: 0.921
+Ep  170/3000 | Score:      0 | Pieces:  13 | Lines:   0 | Loss: 0.0000 | ε: 0.916
+Ep  180/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 0.0000 | ε: 0.911
+Ep  190/3000 | Score:      0 | Pieces:  19 | Lines:   0 | Loss: 0.0000 | ε: 0.906
+Ep  200/3000 | Score:      0 | Pieces:  18 | Lines:   0 | Loss: 0.0000 | ε: 0.901
+Ep  210/3000 | Score:      0 | Pieces:  20 | Lines:   0 | Loss: 0.0000 | ε: 0.896
+Traceback (most recent call last):
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 478, in <module>
+    agent.train()
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 325, in train
+    score, pieces, lines, total_reward = self.play_episode()
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 271, in play_episode
+    action = self.select_action()
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 198, in select_action
+    next_states = self.env.get_next_states()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\tetris.py", line None, in get_next_states
+KeyboardInterrupt

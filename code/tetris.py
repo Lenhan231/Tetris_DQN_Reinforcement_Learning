@@ -1,266 +1,100 @@
-"""
-STEP 1: TETRIS GAME ENGINE (Core Game Logic)
-=============================================
-Mục đích: Xây dựng game Tetris cơ bản với đầy đủ mechanics
-
-═════════════════════════════════════════════════════════════════════════════
-WHAT IS TETRIS?
-═════════════════════════════════════════════════════════════════════════════
-
-Classic tile-matching game:
-- Board 20×10 (height × width)
-- 7 loại tetromino pieces (I, O, T, S, Z, L, J)
-- Mỗi step: piece rơi xuống → khi chạm dừng
-- Xóa hàng đầy (full row) → gain points
-- Game over khi piece không vừa ở vị trí spawn
-
-═════════════════════════════════════════════════════════════════════════════
-KEY MECHANICS
-═════════════════════════════════════════════════════════════════════════════
-
-1. PIECES (Tetrominos):
-   └─ 7 types: O, T, S, Z, I, L, J (mỗi type có shape khác nhau)
-   └─ Mỗi piece có 4 states rotation (xoay 90°)
-   └─ O-piece (vàng) không cần rotate
-
-2. COLLISION DETECTION:
-   └─ Kiểm tra piece có vượt biên (trái/phải/dưới)
-   └─ Kiểm tra piece có chạm khối khác
-
-3. PIECE DROP:
-   └─ Piece rơi từ trên xuống
-   └─ Dừng khi chạm tường dưới hoặc khối khác
-   └─ Lock piece lên board
-
-4. LINE CLEAR:
-   └─ Kiểm tra hàng nào đầy (full row)
-   └─ Xóa hàng → giảm high → insert empty row ở trên
-   └─ Scoring: 1 line = 1 + 1²×10, 2 lines = 1 + 4×10, etc
-
-5. STATE FEATURES (để train RL):
-   └─ lines_cleared: số hàng đã xóa
-   └─ holes: ô trống bị che phủ bên dưới khối
-   └─ bumpiness: tổng chênh lệch chiều cao giữa các cột
-   └─ height: tổng chiều cao của tất cả cột
-
-═════════════════════════════════════════════════════════════════════════════
-
-Chạy: python tetris.py (demo game 5 steps)
-"""
-
 import random
 from collections import deque
-
 class TetrisGame:
-    """Tetris game engine: board, pieces, collision, scoring, state tracking"""
-
-    # 7 loại tetromino pieces (mỗi số = piece type/color)
     PIECES = [
-        [[1, 1], [1, 1]],                    # O-piece (vàng): 2×2 square
-        [[0, 2, 0], [2, 2, 2]],              # T-piece (tím): T shape
-        [[0, 3, 3], [3, 3, 0]],              # S-piece (xanh lá): S shape
-        [[4, 4, 0], [0, 4, 4]],              # Z-piece (đỏ): Z shape
-        [[5, 5, 5, 5]],                      # I-piece (xanh dương): line
-        [[0, 0, 6], [6, 6, 6]],              # L-piece (cam): L shape
-        [[7, 0, 0], [7, 7, 7]]               # J-piece (xanh): J shape
+        [[1, 1], [1, 1]],                    
+        [[0, 2, 0], [2, 2, 2]],             
+        [[0, 3, 3], [3, 3, 0]],             
+        [[4, 4, 0], [0, 4, 4]],              
+        [[5, 5, 5, 5]],                     
+        [[0, 0, 6], [6, 6, 6]],              
+        [[7, 0, 0], [7, 7, 7]]               
     ]
 
     def __init__(self, height=20, width=10):
-        """Khởi tạo game
-
-        Args:
-            height: Board height (default 20)
-            width: Board width (default 10)
-        """
         self.height = height
         self.width = width
         self.reset()
 
     def reset(self):
-        """Reset game về trạng thái ban đầu
-
-        Return:
-            state_features: (lines_cleared, holes, bumpiness, total_height)
-        """
-        # Board: 0 = empty, 1-7 = piece type
         self.board = [[0] * self.width for _ in range(self.height)]
-
-        # Game state
         self.score = 0
-        self.tetrominoes = 0        # Số khối đã đặt
-        self.cleared_lines = 0      # Số hàng đã xóa
+        self.tetrominoes = 0        
+        self.cleared_lines = 0      
         self.game_over = False
-        self.current_piece_idx = 0  # Index của piece hiện tại (để track rotation)
-
-        # Piece bag: 7-bag random system
-        # (Tránh 2 pieces giống nhau liên tiếp, random hơn)
+        self.current_piece_idx = 0  
         self.piece_bag = list(range(len(self.PIECES)))
         random.shuffle(self.piece_bag)
-
-        # Spawn khối đầu tiên
         self._spawn_new_piece()
         return self._get_state_features()
 
     def _spawn_new_piece(self):
-        """Spawn khối tetromino mới ở vị trí spawn (giữa trên cùng)
-
-        Dùng piece bag (7-bag system):
-        - Shuffle 7 pieces → pop từ dưới lên
-        - Khi bag hết → shuffle lại
-
-        Game over nếu không có chỗ tại spawn position
-        """
         if not self.piece_bag:
             self.piece_bag = list(range(len(self.PIECES)))
             random.shuffle(self.piece_bag)
 
-        # Lấy piece từ bag
         self.current_piece_idx = self.piece_bag.pop()
         self.current_piece = [row[:] for row in self.PIECES[self.current_piece_idx]]
-
-        # Vị trí spawn: giữa trên cùng
         self.piece_x = self.width // 2 - len(self.current_piece[0]) // 2
         self.piece_y = 0
 
-        # Kiểm tra collision tại spawn → Game Over
         if self._check_collision(self.current_piece, self.piece_x, self.piece_y):
             self.game_over = True
 
     def _rotate_90(self, piece):
-        """Xoay piece 90 độ (clockwise)
-
-        Công thức: transpose + reverse mỗi row
-        - Transpose: swap (row, col)
-        - Reverse: reverse row order
-
-        Ví dụ:
-        [[1, 0],        [[1, 0],
-         [1, 1]]  →  transpose →  [0, 1]]
-        sau đó reverse → [[0, 1], [1, 0]] xoay 90°
-
-        Args:
-            piece: 2D list of piece shape
-
-        Return:
-            rotated: xoay 90° clockwise
-        """
         num_rows = len(piece)
         num_cols = len(piece[0])
         rotated = []
-
         for i in range(num_cols):
             new_row = []
             for j in range(num_rows - 1, -1, -1):
                 new_row.append(piece[j][i])
             rotated.append(new_row)
-
         return rotated
 
     def _check_collision(self, piece, x, y):
-        """Kiểm tra collision của piece tại vị trí (x, y)
-
-        Check 3 điều:
-        1. Vượt biên trái/phải?
-        2. Chạm đáy (y >= height)?
-        3. Chạm khối khác trên board?
-
-        Args:
-            piece: 2D piece shape
-            x, y: top-left position của piece trên board
-
-        Return:
-            True nếu collision, False nếu OK
-        """
         for py in range(len(piece)):
             for px in range(len(piece[0])):
-                if piece[py][px] == 0:  # Skip empty cells
+                if piece[py][px] == 0:
                     continue
-
                 board_x = x + px
                 board_y = y + py
-
-                # Check biên trái/phải
                 if board_x < 0 or board_x >= self.width:
                     return True
-
-                # Check đáy
                 if board_y >= self.height:
                     return True
-
-                # Check chạm khối khác (chỉ check khi y >= 0)
                 if board_y >= 0 and self.board[board_y][board_x] != 0:
                     return True
-
         return False
 
     def _place_piece(self):
-        """Cố định (lock) piece hiện tại lên board
-
-        Duyệt qua tất cả cells của piece:
-        - Nếu cell không empty → cập nhật board
-        """
         for py in range(len(self.current_piece)):
             for px in range(len(self.current_piece[0])):
                 if self.current_piece[py][px] != 0:
                     board_x = self.piece_x + px
                     board_y = self.piece_y + py
-
                     if 0 <= board_y < self.height and 0 <= board_x < self.width:
                         self.board[board_y][board_x] = self.current_piece[py][px]
 
     def _clear_full_lines(self):
-        """Xóa hàng đầy, tính điểm
-
-        Algorithm:
-        1. Tìm hàng nào đầy (không có 0)
-        2. Xóa ALL full lines cùng lúc (tránh index shift)
-        3. Insert N empty rows ở trên một lần (gravity)
-        4. Tính điểm theo Tetris standard scoring:
-
-        Return:
-            (num_lines_cleared, points)
-        """
         full_lines = []
-
-        # Tìm hàng đầy
         for y in range(self.height):
             if 0 not in self.board[y]:
                 full_lines.append(y)
-
-        # Delete all full lines cùng lúc (avoid index shift bug)
         for y in sorted(full_lines, reverse=True):
             del self.board[y]
-
-        # Insert N empty rows ở top một lần
         num_lines = len(full_lines)
         for _ in range(num_lines):
             self.board.insert(0, [0] * self.width)
 
-        # Tính điểm (Tetris standard scoring)
-        
+        # tinh diem    
         points = 0
         if num_lines > 0:
-            points = 1 + (num_lines ** 2) * 10  # 1 line=10, 2 lines=40, 3 lines=90, 4 lines=160
+            points = 1 + (num_lines ** 2) * 10  
 
         return num_lines, points
 
     def _get_state_features(self, lines_cleared=0):
-        """Trích xuất 4 features từ board state (dùng cho neural network)
-
-        Features:
-        1. lines_cleared: Số hàng xóa bởi NƯỚC ĐI vừa rồi/đang simulate,
-           KHÔNG phải tổng cộng dồn cả ván (cộng dồn sẽ giống nhau cho mọi
-           action trong get_next_states và non-stationary theo thời gian)
-        2. holes: Số ô trống bị che phủ (penalty - xấu nếu cao)
-        3. bumpiness: Độ gồ ghề bề mặt (penalty - xấu nếu cao)
-        4. height: Tổng chiều cao các cột (penalty - xấu nếu cao)
-
-        Args:
-            lines_cleared: số hàng xóa bởi nước đi tạo ra board hiện tại
-
-        Return:
-            (lines_cleared, holes, bumpiness, total_height)
-        """
         lines = lines_cleared
         holes = 0
         heights = []
@@ -292,7 +126,7 @@ class TetrisGame:
         return (lines, holes, bumpiness, sum(heights))
 
     def step(self, action, on_drop_step=None):
-        """Thực hiện 1 action (move + drop)
+        """
 
         Action:
         - action[0] (x_pos): vị trí ngang nơi đặt piece (0-10)
@@ -363,40 +197,22 @@ class TetrisGame:
         return reward, self.game_over, self._get_state_features(lines_cleared)
 
     def get_next_states(self):
-        """Enumerate tất cả possible next states (dùng cho AI planning)
-
-        Tính tất cả combinations của (rotation, x_position):
-        - max_rotations: 1 (O), 2 (S/Z/I), hoặc 4 (T/L/J)
-        - max_x: 0 to (width - piece_width)
-
-        Mỗi combination:
-        1. Simulate drop (tìm final y)
-        2. Simulate lock piece lên board copy
-        3. Simulate clear lines
-        4. Extract features từ board copy
-
-        Return:
-            Dict: {(x_pos, num_rotations): (lines, holes, bumpiness, height)}
-        """
         states = {}
         piece = [row[:] for row in self.current_piece]
 
-        # Xác định số lần rotate tối đa (tùy piece type hiện tại)
+        # giam so lan xoay
         piece_idx = self.current_piece_idx
-        if piece_idx == 0:  # O-piece: không cần rotate
+        if piece_idx == 0:  
             max_rotations = 1
-        elif piece_idx in [2, 3, 4]:  # S, Z, I: 2 rotations (90° = 180°)
+        elif piece_idx in [2, 3, 4]: 
             max_rotations = 2
-        else:  # T, L, J: 4 rotations
+        else: 
             max_rotations = 4
 
-        # Vòng 1: Thử mỗi rotation
-        for rotation in range(max_rotations):
+        for rotation in range(max_rotations): #rotation
             max_x = self.width - len(piece[0])
-
-            # Vòng 2: Thử mỗi x position
             for x in range(max_x + 1):
-                # Simulate: drop piece (tìm final y)
+                # Simulate: drop piece xuống (tìm final y)  
                 y = 0
                 while not self._check_collision(piece, x, y):
                     y += 1
@@ -412,9 +228,6 @@ class TetrisGame:
                             if 0 <= by < self.height and 0 <= bx < self.width:
                                 temp_board[by][bx] = piece[py][px]
 
-                # Simulate: clear lines — del HẾT rồi mới insert (giống
-                # _clear_full_lines). Insert trong loop làm index dịch xuống,
-                # xóa nhầm hàng khi clear 2+ hàng cùng lúc.
                 full_lines = [r for r in range(self.height) if 0 not in temp_board[r]]
                 for r in sorted(full_lines, reverse=True):
                     del temp_board[r]
@@ -436,6 +249,25 @@ class TetrisGame:
 
         return states
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # render tag for test.py and train.py if flag render is set not very important skip
     def print_board(self):
         """In board ra console (debug visualization)
 
@@ -543,37 +375,3 @@ class TetrisGame:
         # Show window
         cv2.imshow(window_name, img)
         cv2.waitKey(1)
-
-
-# Demo: Play cơ bản
-if __name__ == "__main__":
-    import random
-
-    print("🎮 TETRIS GAME DEMO")
-    print("=" * 50)
-    print("Playing 5 random steps...\n")
-
-    game = TetrisGame(height=20, width=10)
-
-    for step_num in range(5):
-        print(f"\n--- STEP {step_num + 1} ---")
-
-        # Get all possible next states
-        next_states = game.get_next_states()
-        if next_states:
-            # Random action
-            action = random.choice(list(next_states.keys()))
-        else:
-            break
-
-        print(f"Action: x_pos={action[0]}, rotations={action[1]}")
-        reward, done, features = game.step(action)
-        print(f"Reward: {reward}")
-
-        game.print_board()
-
-        if done:
-            print("GAME OVER!")
-            break
-
-    print("✅ Demo complete!")

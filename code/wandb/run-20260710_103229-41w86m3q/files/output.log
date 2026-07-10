@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 360, in <module>
+    agent = DQNAgent(args)
+            ^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 52, in __init__
+    self.epoch
+AttributeError: 'DQNAgent' object has no attribute 'epoch'
