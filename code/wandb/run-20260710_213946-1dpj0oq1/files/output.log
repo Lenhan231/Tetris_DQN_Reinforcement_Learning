@@ -1,0 +1,73 @@
+
+======================================================================
+ TRAINING DQN AGENT
+======================================================================
+Device: cpu
+Episodes: 3000
+Batch size: 512
+Learning rate: 0.001
+Gamma: 0.99
+Initial epsilon: 1.0
+Final epsilon: 0.001
+Epsilon decay episodes: 2000.0
+Replay buffer size: 3000
+Max episode pieces: 100000
+======================================================================
+Ep  100/3000 | Avg_Score: 0.00 | Avg_Pieces: 18.09 | Avg_Lines: 0.00 | Loss: 349.6404 | ε: 0.951
+New best score: 11 - saving model!
+Ep  200/3000 | Avg_Score: 0.22 | Avg_Pieces: 18.04 | Avg_Lines: 0.02 | Loss: 1530.1546 | ε: 0.901
+Ep  300/3000 | Avg_Score: 0.11 | Avg_Pieces: 18.08 | Avg_Lines: 0.01 | Loss: 2396.5179 | ε: 0.851
+Ep  400/3000 | Avg_Score: 0.11 | Avg_Pieces: 17.12 | Avg_Lines: 0.01 | Loss: 2831.2840 | ε: 0.801
+Ep  500/3000 | Avg_Score: 0.11 | Avg_Pieces: 17.01 | Avg_Lines: 0.01 | Loss: 2575.8287 | ε: 0.751
+Ep  600/3000 | Avg_Score: 0.11 | Avg_Pieces: 17.65 | Avg_Lines: 0.01 | Loss: 2202.5114 | ε: 0.701
+Ep  700/3000 | Avg_Score: 0.22 | Avg_Pieces: 18.52 | Avg_Lines: 0.02 | Loss: 1850.3103 | ε: 0.651
+Ep  800/3000 | Avg_Score: 0.33 | Avg_Pieces: 20.55 | Avg_Lines: 0.03 | Loss: 1342.7664 | ε: 0.601
+New best score: 52 - saving model!
+  (đã xóa bản cũ: tetris_best_11.pth)
+Ep  900/3000 | Avg_Score: 0.96 | Avg_Pieces: 21.11 | Avg_Lines: 0.07 | Loss: 1183.0113 | ε: 0.551
+Ep 1000/3000 | Avg_Score: 0.55 | Avg_Pieces: 19.73 | Avg_Lines: 0.05 | Loss: 1110.5627 | ε: 0.501
+Ep 1100/3000 | Avg_Score: 1.43 | Avg_Pieces: 26.10 | Avg_Lines: 0.13 | Loss: 736.1398 | ε: 0.451
+New best score: 63 - saving model!
+  (đã xóa bản cũ: tetris_best_52.pth)
+Ep 1200/3000 | Avg_Score: 5.65 | Avg_Pieces: 26.82 | Avg_Lines: 0.41 | Loss: 444.4093 | ε: 0.401
+New best score: 113 - saving model!
+  (đã xóa bản cũ: tetris_best_63.pth)
+New best score: 167 - saving model!
+  (đã xóa bản cũ: tetris_best_113.pth)
+Ep 1300/3000 | Avg_Score: 22.77 | Avg_Pieces: 32.36 | Avg_Lines: 1.67 | Loss: 270.4354 | ε: 0.351
+New best score: 211 - saving model!
+  (đã xóa bản cũ: tetris_best_167.pth)
+Ep 1400/3000 | Avg_Score: 33.37 | Avg_Pieces: 35.12 | Avg_Lines: 2.41 | Loss: 295.9904 | ε: 0.301
+New best score: 226 - saving model!
+  (đã xóa bản cũ: tetris_best_211.pth)
+New best score: 269 - saving model!
+  (đã xóa bản cũ: tetris_best_226.pth)
+Ep 1500/3000 | Avg_Score: 70.48 | Avg_Pieces: 40.17 | Avg_Lines: 4.42 | Loss: 254.2399 | ε: 0.251
+New best score: 272 - saving model!
+  (đã xóa bản cũ: tetris_best_269.pth)
+New best score: 342 - saving model!
+  (đã xóa bản cũ: tetris_best_272.pth)
+New best score: 521 - saving model!
+  (đã xóa bản cũ: tetris_best_342.pth)
+Ep 1600/3000 | Avg_Score: 102.08 | Avg_Pieces: 48.46 | Avg_Lines: 6.72 | Loss: 254.1198 | ε: 0.201
+New best score: 611 - saving model!
+  (đã xóa bản cũ: tetris_best_521.pth)
+New best score: 1064 - saving model!
+  (đã xóa bản cũ: tetris_best_611.pth)
+Ep 1700/3000 | Avg_Score: 198.17 | Avg_Pieces: 61.47 | Avg_Lines: 11.78 | Loss: 253.4217 | ε: 0.151
+New best score: 1654 - saving model!
+  (đã xóa bản cũ: tetris_best_1064.pth)
+Ep 1800/3000 | Avg_Score: 272.29 | Avg_Pieces: 72.08 | Avg_Lines: 15.96 | Loss: 324.0621 | ε: 0.101
+New best score: 3282 - saving model!
+  (đã xóa bản cũ: tetris_best_1654.pth)
+New best score: 4146 - saving model!
+  (đã xóa bản cũ: tetris_best_3282.pth)
+New best score: 4374 - saving model!
+  (đã xóa bản cũ: tetris_best_4146.pth)
+Ep 1900/3000 | Avg_Score: 720.79 | Avg_Pieces: 131.20 | Avg_Lines: 38.89 | Loss: 371.7966 | ε: 0.051
+New best score: 5817 - saving model!
+  (đã xóa bản cũ: tetris_best_4374.pth)
+New best score: 6142 - saving model!
+  (đã xóa bản cũ: tetris_best_5817.pth)
+New best score: 7164 - saving model!
+  (đã xóa bản cũ: tetris_best_6142.pth)

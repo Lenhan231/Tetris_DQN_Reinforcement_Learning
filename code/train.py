@@ -1,3 +1,7 @@
+"""
+    Best run command:
+    python train.py --wandb --shape_holes -1 --shape_bump -1 --shape_height -1 --num_epochs 3000 --memory_size 3000 --final_eps 0.001 --max_episode_pieces 100000 --lr 0.001 --target_update 10 --decay_epochs 2000 --final_eps 0.001
+"""
 import argparse
 import os
 import torch

@@ -23,9 +23,6 @@ class DeepQNetwork(nn.Module):
         x = F.relu(self.fc2(x))
         return self.fc3(x)
 
-    def count_params(self):
-        """Count total trainable parameters."""
-        return sum(p.numel() for p in self.parameters())
 
     
 
