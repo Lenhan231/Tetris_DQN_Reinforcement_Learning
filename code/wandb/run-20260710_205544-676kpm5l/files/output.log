@@ -1,0 +1,41 @@
+
+======================================================================
+ TRAINING DQN AGENT
+======================================================================
+Device: cpu
+Episodes: 3000
+Batch size: 512
+Learning rate: 0.001
+Gamma: 0.99
+Initial epsilon: 1.0
+Final epsilon: 0.01
+Epsilon decay episodes: 2000.0
+Replay buffer size: 3000
+Max episode pieces: 100000
+======================================================================
+New best score: 11 - saving model!
+Ep  100/3000 | Score: 0.11 | Pieces: 18.76 | Lines: 0.01 | Loss: 620.6047 | ε: 0.951
+Ep  200/3000 | Score: 0.22 | Pieces: 17.87 | Lines: 0.02 | Loss: 1696.4070 | ε: 0.901
+Ep  300/3000 | Score: 0.00 | Pieces: 17.72 | Lines: 0.00 | Loss: 2184.6925 | ε: 0.852
+Ep  400/3000 | Score: 0.00 | Pieces: 17.66 | Lines: 0.00 | Loss: 2475.1493 | ε: 0.802
+Ep  500/3000 | Score: 0.33 | Pieces: 17.69 | Lines: 0.03 | Loss: 2435.2342 | ε: 0.753
+Ep  600/3000 | Score: 0.22 | Pieces: 18.61 | Lines: 0.02 | Loss: 2239.3585 | ε: 0.703
+Traceback (most recent call last):
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 330, in <module>
+    agent.train()
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 186, in train
+    score, pieces, lines, total_reward = self.play_episode()
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 158, in play_episode
+    action = self.select_action()
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py", line 90, in select_action
+    next_states = self.env.get_next_states()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\tetris.py", line 213, in get_next_states
+    temp_board = [row[:] for row in self.board]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\tetris.py", line 213, in <listcomp>
+    temp_board = [row[:] for row in self.board]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

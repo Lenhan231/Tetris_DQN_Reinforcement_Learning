@@ -178,22 +178,6 @@ class DQNAgent:
         return self.env.score, self.env.tetrominoes, self.env.cleared_lines, total_reward
 
     def train(self):
-
-        print("\n" + "=" * 70)
-        print(" TRAINING DQN AGENT")
-        print("=" * 70)
-        print(f"Device: {self.device}")
-        print(f"Episodes: {self.args.num_epochs}")
-        print(f"Batch size: {self.args.batch_size}")
-        print(f"Learning rate: {self.args.lr}")
-        print(f"Gamma: {self.args.gamma}")
-        print(f"Initial epsilon: {self.args.initial_eps}")
-        print(f"Final epsilon: {self.args.final_eps}")
-        print(f"Epsilon decay episodes: {self.args.decay_epochs}")
-        print(f"Replay buffer size: {self.args.memory_size}")
-        print(f"Max episode pieces: {self.args.max_episode_pieces}")
-        print("=" * 70)
-
         os.makedirs(self.args.save_path, exist_ok=True)
 
         for ep in range(self.args.num_epochs):
@@ -247,14 +231,15 @@ class DQNAgent:
 
                 print(
                     f"Ep {ep + 1:4d}/{self.args.num_epochs} | "
-                    f"Score: {metrics[f'game/avg_score_{interval}']:.2f} | "
-                    f"Pieces: {metrics[f'game/avg_pieces_{interval}']:.2f} | "
-                    f"Lines: {metrics[f'game/avg_lines_{interval}']:.2f} | "
+                    f"Avg_Score: {metrics[f'game/avg_score_{interval}']:.2f} | "
+                    f"Avg_Pieces: {metrics[f'game/avg_pieces_{interval}']:.2f} | "
+                    f"Avg_Lines: {metrics[f'game/avg_lines_{interval}']:.2f} | "
                     f"Loss: {metrics['model/loss']:.4f} | "
                     f"ε: {metrics['model/epsilon']:.3f}"
                 )
 
                 wandb.log(metrics)
+
         return self.q_net
 
 
@@ -328,5 +313,19 @@ def get_args():
 if __name__ == "__main__":
     args = get_args()
     agent = DQNAgent(args)
+    print("\n" + "=" * 70)
+    print(" TRAINING DQN AGENT")
+    print("=" * 70)
+    print(f"Device: {agent.device}")
+    print(f"Episodes: {agent.args.num_epochs}")
+    print(f"Batch size: {agent.args.batch_size}")
+    print(f"Learning rate: {agent.args.lr}")
+    print(f"Gamma: {agent.args.gamma}")
+    print(f"Initial epsilon: {agent.args.initial_eps}")
+    print(f"Final epsilon: {agent.args.final_eps}")
+    print(f"Epsilon decay episodes: {agent.args.decay_epochs}")
+    print(f"Replay buffer size: {agent.args.memory_size}")
+    print(f"Max episode pieces: {agent.args.max_episode_pieces}")
+    print("=" * 70)
     agent.train()
 
