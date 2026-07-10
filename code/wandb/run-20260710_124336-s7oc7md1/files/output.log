@@ -265,3 +265,108 @@ Ep 2020/3000 | Score:    496 | Pieces:  98 | Lines:  24 | Loss: 355.9434 | ε: 0
 Ep 2030/3000 | Score:   1346 | Pieces: 192 | Lines:  61 | Loss: 593.8216 | ε: 0.001
 Ep 2040/3000 | Score:      0 | Pieces:  15 | Lines:   0 | Loss: 647.3553 | ε: 0.001
 Ep 2050/3000 | Score:     44 | Pieces:  46 | Lines:   4 | Loss: 1225.9098 | ε: 0.001
+New best score: 86586 - saving model!
+  (đã xóa bản cũ: tetris_best_40385.pth)
+Ep 2060/3000 | Score:     66 | Pieces:  45 | Lines:   6 | Loss: 852.9339 | ε: 0.001
+Ep 2070/3000 | Score:     11 | Pieces:  37 | Lines:   1 | Loss: 489.1768 | ε: 0.001
+Ep 2080/3000 | Score:   1340 | Pieces: 175 | Lines:  55 | Loss: 1092.4761 | ε: 0.001
+Ep 2090/3000 | Score:  11132 | Pieces: 1298 | Lines: 508 | Loss: 903.1332 | ε: 0.001
+Ep 2100/3000 | Score:     96 | Pieces:  54 | Lines:   7 | Loss: 523.7075 | ε: 0.001
+Ep 2110/3000 | Score:      0 | Pieces:  34 | Lines:   0 | Loss: 518.9883 | ε: 0.001
+Ep 2120/3000 | Score:   9087 | Pieces: 1100 | Lines: 429 | Loss: 1029.2663 | ε: 0.001
+Ep 2130/3000 | Score:   2414 | Pieces: 306 | Lines: 111 | Loss: 685.0138 | ε: 0.001
+Ep 2140/3000 | Score:     93 | Pieces:  46 | Lines:   5 | Loss: 511.8670 | ε: 0.001
+Ep 2150/3000 | Score:    239 | Pieces:  70 | Lines:  13 | Loss: 1041.6232 | ε: 0.001
+Ep 2160/3000 | Score:    501 | Pieces:  75 | Lines:  19 | Loss: 886.6937 | ε: 0.001
+Ep 2170/3000 | Score:     52 | Pieces:  44 | Lines:   3 | Loss: 674.7553 | ε: 0.001
+Ep 2180/3000 | Score:     22 | Pieces:  40 | Lines:   2 | Loss: 1042.4161 | ε: 0.001
+Ep 2190/3000 | Score:    491 | Pieces:  86 | Lines:  20 | Loss: 1573.0957 | ε: 0.001
+New best score: 105171 - saving model!
+  (đã xóa bản cũ: tetris_best_86586.pth)
+Ep 2200/3000 | Score:  35690 | Pieces: 4186 | Lines: 1663 | Loss: 760.3828 | ε: 0.001
+Ep 2210/3000 | Score:     33 | Pieces:  40 | Lines:   3 | Loss: 651.5935 | ε: 0.001
+Ep 2220/3000 | Score:     22 | Pieces:  38 | Lines:   2 | Loss: 826.3197 | ε: 0.001
+Ep 2230/3000 | Score:  19029 | Pieces: 1929 | Lines: 760 | Loss: 1456.4094 | ε: 0.001
+Ep 2240/3000 | Score:      0 | Pieces:  35 | Lines:   0 | Loss: 790.6495 | ε: 0.001
+Ep 2250/3000 | Score:   1131 | Pieces: 160 | Lines:  52 | Loss: 1392.7660 | ε: 0.001
+Ep 2260/3000 | Score:    137 | Pieces:  59 | Lines:   9 | Loss: 885.3300 | ε: 0.001
+Ep 2270/3000 | Score:     55 | Pieces:  49 | Lines:   5 | Loss: 744.3869 | ε: 0.001
+Ep 2280/3000 | Score:    315 | Pieces:  67 | Lines:  11 | Loss: 1359.3368 | ε: 0.001
+Ep 2290/3000 | Score:  58069 | Pieces: 5940 | Lines: 2363 | Loss: 1273.0954 | ε: 0.001
+Ep 2300/3000 | Score:    107 | Pieces:  51 | Lines:   8 | Loss: 1070.8742 | ε: 0.001
+Ep 2310/3000 | Score:    189 | Pieces:  64 | Lines:  12 | Loss: 827.8320 | ε: 0.001
+New best score: 108396 - saving model!
+  (đã xóa bản cũ: tetris_best_105171.pth)
+Ep 2320/3000 | Score:  99817 | Pieces: 11073 | Lines: 4418 | Loss: 939.0714 | ε: 0.001
+New best score: 149373 - saving model!
+  (đã xóa bản cũ: tetris_best_108396.pth)
+Ep 2330/3000 | Score:      0 | Pieces:  33 | Lines:   0 | Loss: 567.2685 | ε: 0.001
+Ep 2340/3000 | Score:      0 | Pieces:  39 | Lines:   0 | Loss: 907.1319 | ε: 0.001
+Ep 2350/3000 | Score:     41 | Pieces:  39 | Lines:   2 | Loss: 1331.4748 | ε: 0.001
+Ep 2360/3000 | Score:   5025 | Pieces: 521 | Lines: 196 | Loss: 1043.9381 | ε: 0.001
+Ep 2370/3000 | Score:     52 | Pieces:  39 | Lines:   3 | Loss: 1123.7642 | ε: 0.001
+Ep 2380/3000 | Score:  20388 | Pieces: 2163 | Lines: 853 | Loss: 848.2761 | ε: 0.001
+Ep 2390/3000 | Score:     82 | Pieces:  47 | Lines:   4 | Loss: 999.8083 | ε: 0.001
+Ep 2400/3000 | Score:    324 | Pieces:  88 | Lines:  19 | Loss: 1414.7824 | ε: 0.001
+Ep 2410/3000 | Score:    140 | Pieces:  66 | Lines:  11 | Loss: 918.1677 | ε: 0.001
+Ep 2420/3000 | Score:    299 | Pieces:  70 | Lines:  15 | Loss: 1167.3607 | ε: 0.001
+Ep 2430/3000 | Score:   1631 | Pieces: 184 | Lines:  60 | Loss: 880.5475 | ε: 0.001
+Ep 2440/3000 | Score:     22 | Pieces:  37 | Lines:   2 | Loss: 1685.8153 | ε: 0.001
+Ep 2450/3000 | Score:  82288 | Pieces: 9128 | Lines: 3638 | Loss: 1206.0835 | ε: 0.001
+Ep 2460/3000 | Score:    279 | Pieces:  68 | Lines:  13 | Loss: 621.7147 | ε: 0.001
+Ep 2470/3000 | Score:    102 | Pieces:  46 | Lines:   4 | Loss: 946.9072 | ε: 0.001
+Ep 2480/3000 | Score:  49368 | Pieces: 5648 | Lines: 2245 | Loss: 1466.4348 | ε: 0.001
+New best score: 857897 - saving model!
+  (đã xóa bản cũ: tetris_best_149373.pth)
+Ep 2490/3000 | Score: 224555 | Pieces: 24346 | Lines: 9725 | Loss: 440.7998 | ε: 0.001
+Ep 2500/3000 | Score:    187 | Pieces:  60 | Lines:  10 | Loss: 630.9980 | ε: 0.001
+Ep 2510/3000 | Score:    173 | Pieces:  73 | Lines:  14 | Loss: 1157.0177 | ε: 0.001
+Ep 2520/3000 | Score:   1082 | Pieces: 137 | Lines:  44 | Loss: 1598.4134 | ε: 0.001
+Ep 2530/3000 | Score:   9471 | Pieces: 959 | Lines: 371 | Loss: 842.7202 | ε: 0.001
+Ep 2540/3000 | Score:    217 | Pieces:  66 | Lines:  11 | Loss: 1130.2780 | ε: 0.001
+Ep 2550/3000 | Score:    238 | Pieces:  65 | Lines:  13 | Loss: 1969.8155 | ε: 0.001
+Ep 2560/3000 | Score:    596 | Pieces: 100 | Lines:  26 | Loss: 1996.1781 | ε: 0.001
+Ep 2570/3000 | Score:   3582 | Pieces: 402 | Lines: 148 | Loss: 472.2130 | ε: 0.001
+Ep 2580/3000 | Score:    313 | Pieces:  81 | Lines:  18 | Loss: 842.8035 | ε: 0.001
+Ep 2590/3000 | Score:   3199 | Pieces: 398 | Lines: 145 | Loss: 1511.3373 | ε: 0.001
+Ep 2600/3000 | Score:   2237 | Pieces: 233 | Lines:  85 | Loss: 492.1589 | ε: 0.001
+Ep 2610/3000 | Score:   1366 | Pieces: 166 | Lines:  52 | Loss: 838.4423 | ε: 0.001
+Ep 2620/3000 | Score:  27052 | Pieces: 2910 | Lines: 1150 | Loss: 1536.7565 | ε: 0.001
+Ep 2630/3000 | Score:   2034 | Pieces: 284 | Lines:  99 | Loss: 547.6693 | ε: 0.001
+Ep 2640/3000 | Score:    465 | Pieces:  95 | Lines:  23 | Loss: 899.5037 | ε: 0.001
+Ep 2650/3000 | Score: 157595 | Pieces: 17472 | Lines: 6978 | Loss: 739.5119 | ε: 0.001
+Ep 2660/3000 | Score:    796 | Pieces: 120 | Lines:  32 | Loss: 532.2583 | ε: 0.001
+Ep 2670/3000 | Score:     11 | Pieces:  39 | Lines:   1 | Loss: 1218.0560 | ε: 0.001
+Ep 2680/3000 | Score:   2421 | Pieces: 279 | Lines:  97 | Loss: 1575.1356 | ε: 0.001
+Ep 2690/3000 | Score:    340 | Pieces:  82 | Lines:  17 | Loss: 1044.9122 | ε: 0.001
+Ep 2700/3000 | Score:    362 | Pieces:  83 | Lines:  19 | Loss: 1823.9933 | ε: 0.001
+Ep 2710/3000 | Score:    441 | Pieces:  79 | Lines:  19 | Loss: 899.1943 | ε: 0.001
+Ep 2720/3000 | Score:     63 | Pieces:  46 | Lines:   4 | Loss: 1040.8947 | ε: 0.001
+Ep 2730/3000 | Score:     22 | Pieces:  38 | Lines:   2 | Loss: 1185.1832 | ε: 0.001
+Ep 2740/3000 | Score:   1225 | Pieces: 159 | Lines:  48 | Loss: 2383.0964 | ε: 0.001
+Ep 2750/3000 | Score:  27332 | Pieces: 3023 | Lines: 1195 | Loss: 1476.7739 | ε: 0.001
+Ep 2760/3000 | Score:     22 | Pieces:  37 | Lines:   2 | Loss: 616.4239 | ε: 0.001
+Ep 2770/3000 | Score:     11 | Pieces:  37 | Lines:   1 | Loss: 1673.9142 | ε: 0.001
+Ep 2780/3000 | Score:  21172 | Pieces: 2256 | Lines: 890 | Loss: 691.3665 | ε: 0.001
+Ep 2790/3000 | Score:    148 | Pieces:  61 | Lines:  10 | Loss: 804.7022 | ε: 0.001
+Ep 2800/3000 | Score:   7395 | Pieces: 792 | Lines: 303 | Loss: 1729.8601 | ε: 0.001
+Ep 2810/3000 | Score: 114085 | Pieces: 12143 | Lines: 4842 | Loss: 1056.5630 | ε: 0.001
+Ep 2820/3000 | Score:     96 | Pieces:  57 | Lines:   7 | Loss: 845.1484 | ε: 0.001
+Ep 2830/3000 | Score:   1809 | Pieces: 208 | Lines:  69 | Loss: 1725.2009 | ε: 0.001
+Ep 2840/3000 | Score:  11988 | Pieces: 1192 | Lines: 464 | Loss: 1628.4111 | ε: 0.001
+Ep 2850/3000 | Score:   1539 | Pieces: 185 | Lines:  59 | Loss: 720.1080 | ε: 0.001
+Ep 2860/3000 | Score:   1024 | Pieces: 120 | Lines:  33 | Loss: 1753.5361 | ε: 0.001
+Ep 2870/3000 | Score:   4655 | Pieces: 531 | Lines: 200 | Loss: 2366.8751 | ε: 0.001
+Ep 2880/3000 | Score:   5153 | Pieces: 580 | Lines: 217 | Loss: 813.2737 | ε: 0.001
+Ep 2890/3000 | Score:    287 | Pieces:  68 | Lines:  12 | Loss: 818.0962 | ε: 0.001
+Ep 2900/3000 | Score:   1031 | Pieces: 136 | Lines:  39 | Loss: 1437.3824 | ε: 0.001
+Ep 2910/3000 | Score:  22184 | Pieces: 2359 | Lines: 932 | Loss: 2001.3725 | ε: 0.001
+Ep 2920/3000 | Score:   4193 | Pieces: 450 | Lines: 166 | Loss: 1045.5196 | ε: 0.001
+Ep 2930/3000 | Score:   2756 | Pieces: 301 | Lines: 106 | Loss: 893.7263 | ε: 0.001
+Ep 2940/3000 | Score:     96 | Pieces:  53 | Lines:   7 | Loss: 1337.2439 | ε: 0.001
+Ep 2950/3000 | Score:    910 | Pieces: 129 | Lines:  37 | Loss: 2252.9625 | ε: 0.001
+Ep 2960/3000 | Score:     33 | Pieces:  40 | Lines:   3 | Loss: 987.8791 | ε: 0.001
+Ep 2970/3000 | Score:     11 | Pieces:  36 | Lines:   1 | Loss: 1371.3966 | ε: 0.001
+Ep 2980/3000 | Score:   4934 | Pieces: 540 | Lines: 202 | Loss: 2206.4300 | ε: 0.001
+Ep 2990/3000 | Score:   8187 | Pieces: 891 | Lines: 347 | Loss: 1761.8941 | ε: 0.001
+Ep 3000/3000 | Score:    124 | Pieces:  52 | Lines:   6 | Loss: 1489.7160 | ε: 0.001

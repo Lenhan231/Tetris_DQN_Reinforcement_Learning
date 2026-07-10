@@ -157,13 +157,8 @@ class DQNAgent:
 
             action = self.select_action()
             reward, done, next_state = self.env.step(action)
-
-            # Reward shaping theo DELTA feature (potential-based shaping):
-            # phạt/thưởng phần THAY ĐỔI của holes/bumpiness/height sau nước đi,
-            # KHÔNG phạt giá trị tuyệt đối (phạt tuyệt đối làm reward luôn âm
-            # và lệch policy — chính là bug của bản cũ). Đặt ở train.py để
-            # reward gốc của env và score khi test giữ nguyên ý nghĩa.
-            # features: (lines, holes, bumpiness, height)
+            
+            # the differ of next_state to state then multily by shaping factors
             reward -= self.args.shape_holes * (next_state[1] - state[1])
             reward -= self.args.shape_bump * (next_state[2] - state[2])
             reward -= self.args.shape_height * (next_state[3] - state[3])
@@ -329,12 +324,12 @@ def get_args():
                              "(default: 1000; tránh lưu các best rác đầu run)")
 
     # Reward shaping (phạt theo DELTA feature sau mỗi nước, 0 = tắt)
-    parser.add_argument("--shape_holes", type=float, default=0.5,
-                        help="Phạt mỗi hole MỚI tạo ra (default: 0.5)")
-    parser.add_argument("--shape_bump", type=float, default=0.1,
-                        help="Phạt mỗi đơn vị bumpiness TĂNG thêm (default: 0.1)")
-    parser.add_argument("--shape_height", type=float, default=0.1,
-                        help="Phạt mỗi đơn vị height TĂNG thêm (default: 0.1)")
+    parser.add_argument("--shape_holes", type=float, default=-1.0,
+                        help="Phạt mỗi hole MỚI tạo ra (default: -1.0)")
+    parser.add_argument("--shape_bump", type=float, default=-1.0,
+                        help="Phạt mỗi đơn vị bumpiness TĂNG thêm (default: -1.0)")
+    parser.add_argument("--shape_height", type=float, default=-0.1,
+                        help="Phạt mỗi đơn vị height TĂNG thêm (default: -0.1)")
 
     # Visualization & Tracking
     parser.add_argument("--render", action="store_true",
