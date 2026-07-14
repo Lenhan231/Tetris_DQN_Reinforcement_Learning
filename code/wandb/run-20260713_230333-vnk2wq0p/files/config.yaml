@@ -1,0 +1,82 @@
+_wandb:
+    value:
+        cli_version: 0.28.0
+        e:
+            w0oni9wifpyjs7f5blcryumjgmmlscqm:
+                args:
+                    - --wandb
+                    - --shape_holes
+                    - "-0.35663"
+                    - --shape_bump
+                    - "-0.184483"
+                    - --shape_height
+                    - "-0.510066"
+                    - --num_epochs
+                    - "3000"
+                    - --memory_size
+                    - "10000"
+                    - --final_eps
+                    - "0.001"
+                    - --max_episode_lines
+                    - "10000"
+                    - --lr
+                    - "0.001"
+                    - --target_update
+                    - "10"
+                    - --decay_epochs
+                    - "2000"
+                    - --final_eps
+                    - "0.001"
+                    - --batch_size
+                    - "32"
+                codePath: code\train.py
+                codePathLocal: train.py
+                cpu_count: 4
+                cpu_count_logical: 8
+                disk:
+                    /:
+                        total: "511029800960"
+                        used: "189540040704"
+                email: nhanle221199@gmail.com
+                executable: C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\.venv\Scripts\python.exe
+                git:
+                    commit: 3d64b81ba2933b9a342a5a95e1ed0a5499939091
+                    remote: https://github.com/Lenhan231/Tetris-Reinforcementlearning.git
+                host: DESKTOP-TISCMD1
+                memory:
+                    total: "8365002752"
+                os: Windows-10-10.0.26200-SP0
+                program: C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code\train.py
+                python: CPython 3.11.9
+                root: C:\Users\nhanl\OneDrive\Desktop\School\REL301m\tetris_from_scratch\code
+                startedAt: "2026-07-13T16:03:33.200028Z"
+                writerId: w0oni9wifpyjs7f5blcryumjgmmlscqm
+        m: []
+        python_version: 3.11.9
+        t:
+            "1":
+                - 1
+            "2":
+                - 1
+            "3":
+                - 16
+            "4": 3.11.9
+            "5": 0.28.0
+            "8":
+                - 3
+            "12": 0.28.0
+            "13": windows-amd64
+batch_size:
+    value: 32
+decay_epochs:
+    value: 2000
+final_eps:
+    value: 0.001
+gamma:
+    value: 0.99
+initial_eps:
+    value: 1
+lr:
+    value: 0.001
+num_epochs:
+    value: 3000

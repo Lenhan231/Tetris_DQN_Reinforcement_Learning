@@ -113,15 +113,15 @@ class DQNAgent:
         states, rewards, next_states, dones = zip(*batch)
 
         # 2. Convert to tensors
-        s = torch.FloatTensor(np.array([list(x) for x in states])).to(self.device)
+        s = torch.FloatTensor(np.array([list(x) for x in states])).to(self.device) #(batch_size,4)
         r = torch.FloatTensor(rewards).unsqueeze(1).to(self.device)
-        s_next = torch.FloatTensor(np.array([list(x) for x in next_states])).to(self.device)
+        s_next = torch.FloatTensor(np.array([list(x) for x in next_states])).to(self.device)#(batch_size,4)
         d = torch.BoolTensor(dones).to(self.device)
 
         # 3. Q_predicted: Q-value từ current network
-        q_pred = self.q_net(s)
+        q_pred = self.q_net(s) # (batch_size, 1)
 
-        # 4. Q_target: Bellman equation
+        # 4. Q_target: Bellman equation dự đoán q-value của next_state bằng target network
         self.target_net.eval()
         with torch.no_grad():
             q_next = self.target_net(s_next)
@@ -131,8 +131,8 @@ class DQNAgent:
 
         # 5. Loss & backprop
         loss = self.criterion(q_pred, q_target)
-        self.optimizer.zero_grad()
-        loss.backward()
+        self.optimizer.zero_grad() # adam
+        loss.backward() # loss / dθ
         self.optimizer.step()
 
         return loss.item()
